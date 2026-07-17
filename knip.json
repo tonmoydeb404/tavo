@@ -1,0 +1,41 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "workspaces": {
+    ".": {
+      "entry": [],
+      "project": []
+    },
+    "apps/web": {
+      "entry": [
+        "src/app/**/{page,layout,loading,error,not-found,opengraph-image,robots,sitemap}.tsx"
+      ]
+    },
+    "apps/extension": {},
+    "packages/ui": {
+      "entry": [
+        "src/components/**/*.tsx",
+        "src/lib/**/*.ts"
+      ],
+      "project": [
+        "src/**/*.{ts,tsx}"
+      ]
+    },
+    "packages/eslint-config": {
+      "entry": [
+        "*.js"
+      ]
+    },
+    "packages/typescript-config": {
+      "entry": []
+    }
+  },
+  "rules": {
+    "exports": "off",
+    "types": "off",
+    "nsExports": "off",
+    "nsTypes": "off"
+  },
+  "ignoreDependencies": [
+    "@workspace/*"
+  ]
+}
