@@ -1,0 +1,33 @@
+# Tavo
+
+> Tavo is a free, open-source browser extension that gives you per-tab volume control (0–400%), one-click tab muting, per-tab microphone mute, and per-tab webcam toggle for any playing audio, video, or WebRTC call in Chrome, Edge, Brave, and other Chromium browsers.
+
+Tavo runs entirely on-device. Every tab remembers its own volume, mute, mic, and camera settings for the session, and state survives reloads and navigation via `chrome.storage.session`. Built on Manifest V3 and the native `chrome.tabs` muting API; volume scaling uses a per-tab Web Audio gain graph. No tracking, no external servers, no account.
+
+The extension is open source under the MIT license. The full source code, issue tracker, and releases live on GitHub.
+
+## Feature Pages
+
+- [Volume Booster](https://tavo.tonmoydeb.com/volume-booster): Boost any tab's audio up to 400% beyond the site's default using a per-tab Web Audio GainNode. Useful for quiet YouTube videos, podcasts, and calls.
+- [Mute Tab](https://tavo.tonmoydeb.com/mute-tab): One-click, browser-native tab muting that silences all audio in a tab — including WebRTC streams — without pausing playback.
+- [Mic Toggle](https://tavo.tonmoydeb.com/mic-toggle): Per-tab microphone mute that operates on the page's getUserStream tracks, isolating one tab without affecting system mic or other calls.
+- [Webcam Toggle](https://tavo.tonmoydeb.com/webcam-toggle): Disable the camera track for the active tab only, leaving other tabs and apps unaffected.
+- [Media Controller](https://tavo.tonmoydeb.com/media-controller): Single popup that exposes volume, mute, mic, and webcam controls for every open tab.
+- [Features](https://tavo.tonmoydeb.com/features): Full feature overview, including per-tab badges, iframe coverage, and session persistence.
+
+## Learn More
+
+- [FAQ](https://tavo.tonmoydeb.com/faq): Common questions about Tavo — how it differs from Chrome's native mute, WebRTC support, privacy, and supported browsers.
+- [Help](https://tavo.tonmoydeb.com/help): Installation, usage, and troubleshooting guide.
+- [Changelog](https://tavo.tonmoydeb.com/changelog): Release history and notable changes.
+- [About](https://tavo.tonmoydeb.com/about): The story behind Tavo and the developer.
+
+## Project
+
+- [GitHub Repository](https://github.com/tonmoydeb404/tavo): Full source code, issues, and pull requests.
+- [Chrome Web Store Listing](https://chrome.google.com/webstore/detail/tavo): Install Tavo from the Chrome Web Store.
+
+## Policies
+
+- [Privacy Policy](https://tavo.tonmoydeb.com/privacy): Tavo runs on-device, stores state in `chrome.storage.session`, and does not collect, transmit, or sell any data.
+- [Terms](https://tavo.tonmoydeb.com/terms): Terms of use for the Tavo extension and website.

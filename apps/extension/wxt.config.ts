@@ -1,19 +1,19 @@
+import { brand } from "@workspace/brand"
 import { defineConfig } from "wxt"
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   modules: ["@wxt-dev/module-react", "@wxt-dev/auto-icons"],
   manifest: {
-    name: "Audio Tuner",
-    description:
-      "Mute tabs and adjust per-tab volume (0-400%) for any playing audio or video.",
+    name: brand.name,
+    description: brand.description,
     version_name: "1.0.0",
     minimum_chrome_version: "88",
     permissions: ["tabs", "storage"],
     host_permissions: ["<all_urls>"],
-    homepage_url: "https://tavo.tonmoydeb.com",
+    homepage_url: brand.url,
     action: {
-      default_title: "Audio Tuner",
+      default_title: brand.name,
     },
   },
   autoIcons: {

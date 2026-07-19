@@ -25,6 +25,7 @@
     "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/noto-serif": "^5.2.9",
     "@tabler/icons-react": "^3.44.0",
+    "@workspace/brand": "workspace:*",
     "@workspace/ui": "workspace:*",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"

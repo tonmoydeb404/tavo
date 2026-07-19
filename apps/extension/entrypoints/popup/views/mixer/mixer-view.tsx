@@ -1,4 +1,5 @@
 import { IconAlertTriangle, IconVolumeOff, IconX } from "@tabler/icons-react"
+import { brand } from "@workspace/brand"
 import { MixerRow } from "@workspace/ui/cards/mixer-row"
 import { Label } from "@workspace/ui/components/label"
 import { Switch } from "@workspace/ui/components/switch"
@@ -25,7 +26,7 @@ function MixerView() {
   return (
     <div className="flex w-full flex-col gap-3">
       <header className="flex items-center justify-between gap-2">
-        <h1 className="font-heading text-base font-medium">Tavo</h1>
+        <h1 className="font-heading text-base font-medium">{brand.name}</h1>
         <Label className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Switch
             checked={showAll}

@@ -5,13 +5,14 @@ import Link from "next/link"
 import { assets } from "@/assets"
 import { pathsConfig } from "@/configs/path-config"
 import { siteConfig } from "@/configs/site-config"
+import { brand } from "@workspace/brand"
 import { buttonVariants } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
 
 function browserRequestMailto(browser: string): string {
-  const subject = encodeURIComponent(`Tavo — ${browser} support request`)
+  const subject = encodeURIComponent(`${brand.name} — ${browser} support request`)
   const body = encodeURIComponent(
-    `Hi, I'd love to use Tavo on ${browser}. Please let me know when it's available.`
+    `Hi, I'd love to use ${brand.name} on ${browser}. Please let me know when it's available.`
   )
   return `mailto:${siteConfig.links.email}?subject=${subject}&body=${body}`
 }
