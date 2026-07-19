@@ -137,7 +137,7 @@ function MixerRow({
             <span className="size-4 shrink-0 rounded-sm bg-muted" />
           )}
           <span
-            className="flex-1 truncate text-sm font-medium"
+            className="flex-1 truncate text-left text-sm font-medium"
             title={tab.title ?? tab.url ?? undefined}
           >
             {label}

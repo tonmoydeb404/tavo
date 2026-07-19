@@ -15,7 +15,7 @@ function HeroSection() {
   return (
     <section className="relative isolate bg-muted pt-10 pb-20 dark:bg-black">
       <div className="relative container flex flex-col items-center pt-20 text-center lg:pt-28">
-        <h1 className="font-heading max-w-4xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+        <h1 className="max-w-4xl font-heading text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
           Every tab&apos;s{" "}
           <span className="text-primary">volume, mic, and camera</span> — in
           your toolbar, not buried in site settings
@@ -49,9 +49,9 @@ function HeroSection() {
           <IconSparkles className="size-3.5 text-primary" />
           Free · No account needed · Works on Chrome, Edge &amp; Brave
         </p>
-      </div>
 
-      <BrowserMockup className="mx-auto mt-12 max-w-4xl" />
+        <BrowserMockup className="mt-12 max-w-4xl" />
+      </div>
     </section>
   )
 }

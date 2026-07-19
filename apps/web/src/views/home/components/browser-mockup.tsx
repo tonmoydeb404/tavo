@@ -1,84 +1,140 @@
 "use client"
 
 import { IconLock, IconPuzzleFilled } from "@tabler/icons-react"
+import {
+  animate,
+  motion,
+  useMotionValue,
+  type AnimationPlaybackControls,
+} from "motion/react"
+import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 
 import { cn } from "@workspace/ui/lib/utils"
 
 import { assets } from "@/assets"
 import { siteConfig } from "@/configs/site-config"
-import Image from "next/image"
 import { MixerMockup } from "./mixer-mockup"
 
-const cursorAnimationStyles = `
-  @keyframes moveToExtension {
-    from {
-      transform: translate(50px, 50px);
-      opacity: 1;
-    }
-    to {
-      transform: translate(var(--cursor-end-x, 0px), var(--cursor-end-y, 0px));
-      opacity: 1;
-    }
-  }
-  
-  @keyframes cursorClick {
-    0%, 100% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(0.8);
-    }
-  }
-`
+const CURSOR_SIZE = 20
 
 /**
  * A decorative browser window mock. Shows the Audio Tuner popup dropping down
  * from the extension's toolbar icon — the product shown in its real context.
+ *
+ * Animation sequence:
+ * 1. Browser fades + slides in
+ * 2. Cursor appears and moves to the extension icon
+ * 3. Cursor clicks (scale pulse)
+ * 4. Popup fades in (and the cursor fades out)
  */
 function BrowserMockup({ className }: { className?: string }) {
-  const [showCursor, setShowCursor] = useState(false)
-  const [showPopup, setShowPopup] = useState(false)
-  const [cursorCoords, setCursorCoords] = useState({ x: 0, y: 0 })
   const browserRef = useRef<HTMLDivElement>(null)
   const iconRef = useRef<HTMLSpanElement>(null)
 
-  useEffect(() => {
-    const timer1 = setTimeout(() => {
-      setShowCursor(true)
-    }, 700)
+  const cursorX = useMotionValue(0)
+  const cursorY = useMotionValue(0)
+  const cursorScale = useMotionValue(1)
+  const cursorOpacity = useMotionValue(0)
+  const popupOpacity = useMotionValue(0)
+  const popupY = useMotionValue(12)
 
-    const timer2 = setTimeout(() => {
-      setShowPopup(true)
-    }, 2500)
+  // Icon center relative to the browser container, measured after layout so
+  // the cursor can travel to the actual icon position. Null until measured.
+  const [target, setTarget] = useState<{ x: number; y: number } | null>(null)
+
+  useEffect(() => {
+    const browserEl = browserRef.current
+    const iconEl = iconRef.current
+    if (!browserEl || !iconEl) return
+
+    const browserRect = browserEl.getBoundingClientRect()
+    const iconRect = iconEl.getBoundingClientRect()
+
+    setTarget({
+      x: iconRect.left - browserRect.left + iconRect.width / 2 - CURSOR_SIZE / 2,
+      y: iconRect.top - browserRect.top + iconRect.height / 2 - CURSOR_SIZE / 2,
+    })
+
+    // Start the cursor somewhere natural inside the page area.
+    cursorX.set(browserRect.width * 0.4)
+    cursorY.set(browserRect.height * 0.72)
+  }, [cursorX, cursorY])
+
+  useEffect(() => {
+    if (!target) return
+
+    const controls: AnimationPlaybackControls[] = []
+    let cancelled = false
+
+    const run = async () => {
+      const fadeIn = animate(cursorOpacity, 1, { duration: 0.2, delay: 0.8 })
+      controls.push(fadeIn)
+      await fadeIn.finished
+      if (cancelled) return
+
+      const moveX = animate(cursorX, target.x, {
+        duration: 1,
+        ease: "easeInOut",
+      })
+      const moveY = animate(cursorY, target.y, {
+        duration: 1,
+        ease: "easeInOut",
+      })
+      controls.push(moveX, moveY)
+      await Promise.all([moveX.finished, moveY.finished])
+      if (cancelled) return
+
+      const press = animate(cursorScale, 0.75, { duration: 0.1 })
+      controls.push(press)
+      await press.finished
+      if (cancelled) return
+
+      const release = animate(cursorScale, 1, { duration: 0.1 })
+      controls.push(release)
+      await release.finished
+      if (cancelled) return
+
+      const popOpacity = animate(popupOpacity, 1, {
+        duration: 0.35,
+        ease: "easeOut",
+      })
+      const popY = animate(popupY, 0, { duration: 0.35, ease: "easeOut" })
+      const cursorOut = animate(cursorOpacity, 0, {
+        duration: 0.3,
+        ease: "easeOut",
+      })
+      controls.push(popOpacity, popY, cursorOut)
+    }
+
+    void run()
 
     return () => {
-      clearTimeout(timer1)
-      clearTimeout(timer2)
+      cancelled = true
+      controls.forEach((c) => c.stop())
     }
-  }, [])
-
-  useEffect(() => {
-    if (showCursor && iconRef.current && browserRef.current) {
-      const iconRect = iconRef.current.getBoundingClientRect()
-      const browserRect = browserRef.current.getBoundingClientRect()
-      setCursorCoords({
-        x: iconRect.left - browserRect.left,
-        y: iconRect.top - browserRect.top,
-      })
-    }
-  }, [showCursor])
+  }, [
+    target,
+    cursorOpacity,
+    cursorX,
+    cursorY,
+    cursorScale,
+    popupOpacity,
+    popupY,
+  ])
 
   return (
-    <>
-      <style>{cursorAnimationStyles}</style>
-      <div
-        ref={browserRef}
-        className={cn(
-          "w-full max-w-3xl animate-in overflow-hidden rounded-xl border border-border/60 bg-card font-heading shadow-2xl ring-1 shadow-primary/10 ring-foreground/5 duration-700 fade-in slide-in-from-bottom-4",
-          className
-        )}
-      >
+    <motion.div
+      ref={browserRef}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: "easeOut" }}
+      className={cn(
+        "relative w-full max-w-3xl overflow-hidden rounded-xl border border-border/60 bg-card font-heading shadow-2xl ring-1 shadow-primary/10 ring-foreground/5",
+        className
+      )}
+    >
+      {/* Toolbar */}
       <div className="flex items-center gap-3 border-b border-border/60 bg-muted/40 px-4 py-2.5">
         <div className="flex items-center gap-1.5">
           <span className="size-3 rounded-full bg-red-400" />
@@ -111,6 +167,7 @@ function BrowserMockup({ className }: { className?: string }) {
         </div>
       </div>
 
+      {/* Page content skeleton */}
       <div className="relative h-110 bg-background">
         <div
           aria-hidden="true"
@@ -133,37 +190,48 @@ function BrowserMockup({ className }: { className?: string }) {
           </div>
         </div>
 
-        <div className="absolute top-2 right-3">
-          {showPopup && <MixerMockup />}
-        </div>
+        {/* Popup */}
+        <motion.div
+          className="absolute right-3 top-2"
+          style={{ opacity: popupOpacity, y: popupY }}
+        >
+          <MixerMockup />
+        </motion.div>
+      </div>
 
-        {showCursor && (
-          <svg
-            className="absolute pointer-events-none"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-            style={{
-              left: "50px",
-              top: "50px",
-              animation: `moveToExtension 1.2s ease-in-out forwards, cursorClick 0.3s ease-in-out 1.2s`,
-              "--cursor-end-x": `${cursorCoords.x}px`,
-              "--cursor-end-y": `${cursorCoords.y}px`,
-            } as Record<string, string>}
-          >
-            <path
-              d="M5 3L3 13L11 11L15 20L18 19L14 10L23 12Z"
-              fill="currentColor"
-              className="text-foreground drop-shadow-lg"
-            />
-          </svg>
-        )}
-      </div>
-      </div>
-    </>
+      {/*
+        Cursor is a direct child of the browser container (not the page
+        content) so its x/y motion values share the browser's coordinate
+        system and can actually reach the toolbar icon.
+      */}
+      <motion.div
+        className="pointer-events-none absolute left-0 top-0 z-10"
+        style={{
+          x: cursorX,
+          y: cursorY,
+          opacity: cursorOpacity,
+          scale: cursorScale,
+        }}
+      >
+        <svg
+          width={CURSOR_SIZE}
+          height={CURSOR_SIZE}
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="drop-shadow-md"
+        >
+          <path
+            d="M3 3 L3 15 L6 12 L8 17 L10 16 L7.5 11 L12 11 Z"
+            fill="white"
+            stroke="#1a1a1a"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+        </svg>
+      </motion.div>
+    </motion.div>
   )
 }
 

@@ -35,9 +35,9 @@ const frameActivity = new Map<
 const lastAggregate = new Map<number, MediaActivity>()
 
 export default defineBackground(() => {
-  // Reflect the number of tabs with non-default state in the toolbar badge,
-  // so users can see (without opening the popup) that they left something
-  // adjusted — e.g. a tab still muted after a call.
+  // Reflect each tab's number of adjustments (volume/mute, mic, camera) as a
+  // per-tab toolbar badge, so users can see (without opening the popup) which
+  // specific tabs they left adjusted — e.g. a tab still muted after a call.
   browser.storage.session.onChanged.addListener((changes) => {
     const hasStateChange = Object.keys(changes).some((key) =>
       key.startsWith("tabState:"),
@@ -289,30 +289,41 @@ async function broadcast(msg: BroadcastMessage): Promise<void> {
   }
 }
 
-// Count tabs whose stored state deviates from defaults and surface that
-// count on the toolbar badge. Neutral color (not red) — this is informational,
-// not an error. Cleared when nothing is adjusted.
+// Set a per-tab badge reflecting the number of adjustments on THAT tab, so
+// users can spot at a glance which tab has volume / mic / camera changes
+// without opening the popup:
+//   volume changed OR tab muted -> +1
+//   mic muted                   -> +1
+//   camera off                  -> +1
+// Max 3 per tab. Tabs with no changes show no badge. The global default is
+// empty so unaffected tabs (including those without per-tab state set yet)
+// stay clean. Neutral color (not red) — informational, not an error.
 async function refreshBadge(): Promise<void> {
   try {
+    // Global default: no badge. Per-tab overrides below take precedence.
+    await browser.action.setBadgeText({ text: "" })
+    await browser.action.setBadgeBackgroundColor({ color: "#6b7280" })
+
     const tabs = await browser.tabs.query({})
-    let adjusted = 0
-    for (const tab of tabs) {
-      if (tab.id == null) continue
-      const state = await getTabState(tab.id)
-      if (
-        state.volume !== DEFAULT_VOLUME ||
-        state.muted ||
-        state.micMuted ||
-        state.cameraOff
-      ) {
-        adjusted++
-      }
-    }
-    const text = adjusted === 0 ? "" : adjusted > 99 ? "99" : String(adjusted)
-    await browser.action.setBadgeText({ text })
-    await browser.action.setBadgeBackgroundColor({
-      color: "#6b7280",
-    })
+    await Promise.all(
+      tabs.map(async (tab) => {
+        if (tab.id == null) return
+        const state = await getTabState(tab.id)
+        let changes = 0
+        if (state.volume !== DEFAULT_VOLUME || state.muted) changes++
+        if (state.micMuted) changes++
+        if (state.cameraOff) changes++
+        // Set the per-tab text unconditionally: empty string clears a previous
+        // override when the tab returned to defaults. Skipping would leave the
+        // stale badge from before the toggle.
+        const text = changes === 0 ? "" : changes > 9 ? "9+" : String(changes)
+        try {
+          await browser.action.setBadgeText({ tabId: tab.id, text })
+        } catch {
+          // Some tabs (e.g. devtools, chrome://) reject per-tab badge state.
+        }
+      }),
+    )
   } catch {
     // Badge is best-effort; ignore failures (e.g. restricted contexts).
   }
