@@ -1,58 +1,79 @@
-name: CI
+name: Release Extension
 
 on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to release (e.g v1.0.0)"
+        required: true
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: release-${{ github.ref }}
   cancel-in-progress: false
-
-env:
-  PNPM_VERSION: 11.15.0
-  NODE_VERSION: "22"
 
 jobs:
   ci:
-    name: Lint, Typecheck, Build & Package
+    name: CI
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
+      - uses: pnpm/action-setup@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 22
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm --filter extension lint
-
       - name: Typecheck
-        run: pnpm --filter extension typecheck
+        run: pnpm --filter @workspace/extension typecheck
 
-      - name: Build
-        run: pnpm --filter extension build
+      - name: Lint
+        run: pnpm --filter @workspace/extension lint
 
-      - name: Package extension (Chrome)
-        run: pnpm --filter extension zip
+      - name: Build packages
+        run: pnpm turbo build --filter='./packages/*'
 
-      - name: Upload extension artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Build extension
+        run: pnpm --filter @workspace/extension build
+
+  release:
+    name: Release
+    needs: ci
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
         with:
-          name: extension-packages
-          path: apps/extension/.output/chrome-mv3-*.zip
-          if-no-files-found: ignore
-          retention-days: 14
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build dependency packages
+        run: pnpm turbo build --filter='./packages/*'
+
+      - name: Zip Chrome extension
+        run: pnpm --filter @workspace/extension zip
+
+      - name: Upload ZIPs to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          generate_release_notes: true
+          files: apps/extension/.output/Tavo-*-chrome.zip
