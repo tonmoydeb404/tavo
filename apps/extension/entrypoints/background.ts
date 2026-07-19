@@ -35,6 +35,17 @@ const frameActivity = new Map<
 const lastAggregate = new Map<number, MediaActivity>()
 
 export default defineBackground(() => {
+  // Reflect the number of tabs with non-default state in the toolbar badge,
+  // so users can see (without opening the popup) that they left something
+  // adjusted — e.g. a tab still muted after a call.
+  browser.storage.session.onChanged.addListener((changes) => {
+    const hasStateChange = Object.keys(changes).some((key) =>
+      key.startsWith("tabState:"),
+    )
+    if (hasStateChange) void refreshBadge()
+  })
+  void refreshBadge()
+
   // Apply stored state to a freshly-loaded tab (page reload, navigation).
   browser.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
     if (changeInfo.status !== "complete") return
@@ -66,6 +77,7 @@ export default defineBackground(() => {
       tabId,
       activity: null,
     })
+    // Badge refresh is triggered by the storage.onChanged listener above.
   })
 
   browser.runtime.onMessage.addListener(
@@ -274,5 +286,34 @@ async function broadcast(msg: BroadcastMessage): Promise<void> {
     await browser.runtime.sendMessage(msg)
   } catch {
     // No listener (popup closed). Expected and harmless.
+  }
+}
+
+// Count tabs whose stored state deviates from defaults and surface that
+// count on the toolbar badge. Neutral color (not red) — this is informational,
+// not an error. Cleared when nothing is adjusted.
+async function refreshBadge(): Promise<void> {
+  try {
+    const tabs = await browser.tabs.query({})
+    let adjusted = 0
+    for (const tab of tabs) {
+      if (tab.id == null) continue
+      const state = await getTabState(tab.id)
+      if (
+        state.volume !== DEFAULT_VOLUME ||
+        state.muted ||
+        state.micMuted ||
+        state.cameraOff
+      ) {
+        adjusted++
+      }
+    }
+    const text = adjusted === 0 ? "" : adjusted > 99 ? "99" : String(adjusted)
+    await browser.action.setBadgeText({ text })
+    await browser.action.setBadgeBackgroundColor({
+      color: "#6b7280",
+    })
+  } catch {
+    // Badge is best-effort; ignore failures (e.g. restricted contexts).
   }
 }

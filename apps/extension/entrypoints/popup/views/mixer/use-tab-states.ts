@@ -10,6 +10,7 @@ import {
   type TabState,
   type ToBackgroundMessage,
 } from "@/lib/messaging"
+import { getShowAllTabs, setShowAllTabs } from "@/lib/preferences"
 
 type Tab = Browser.tabs.Tab
 
@@ -60,7 +61,29 @@ function useTabStates() {
   const [mediaActivity, setMediaActivity] = useState<
     Record<number, MediaActivity>
   >({})
-  const [showAll, setShowAll] = useState(false)
+  const [showAll, setShowAllState] = useState(false)
+
+  // Load persisted "Show all tabs" preference on mount.
+  useEffect(() => {
+    let cancelled = false
+    void (async () => {
+      const stored = await getShowAllTabs()
+      if (cancelled) return
+      setShowAllState(stored)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const setShowAll = useCallback((value: boolean) => {
+    setShowAllState(value)
+    void setShowAllTabs(value)
+  }, [])
+  // False until the first parallel load completes; gates the skeleton.
+  const [loaded, setLoaded] = useState(false)
+  // Set when a send to the background fails (SW restart, etc.). Auto-clears.
+  const [error, setError] = useState<string | null>(null)
 
   const queryTabs = useCallback(async (all: boolean): Promise<Tab[]> => {
     const query = all ? {} : { audible: true }
@@ -74,46 +97,34 @@ function useTabStates() {
     return list
   }, [])
 
-  // Initial tab list load + refresh whenever `showAll` toggles.
+  // Initial parallel load + refresh whenever `showAll` toggles.
   useEffect(() => {
     let cancelled = false
     void (async () => {
-      const list = await queryTabs(showAll)
-      if (cancelled) return
-      setTabs(list)
+      try {
+        const [list, statesResult, activityResult] = await Promise.all([
+          queryTabs(showAll),
+          browser.runtime.sendMessage({
+            type: "get-all-states",
+          } satisfies ToBackgroundMessage),
+          browser.runtime.sendMessage({
+            type: "get-media-activity",
+          } satisfies ToBackgroundMessage),
+        ])
+        if (cancelled) return
+        setTabs(list)
+        if (isResponse(statesResult)) setStates(statesResult)
+        if (isMediaActivityResponse(activityResult)) {
+          setMediaActivity(activityResult)
+        }
+      } finally {
+        if (!cancelled) setLoaded(true)
+      }
     })()
     return () => {
       cancelled = true
     }
   }, [queryTabs, showAll])
-
-  // Initial state load (once).
-  useEffect(() => {
-    let cancelled = false
-    void (async () => {
-      const message: ToBackgroundMessage = { type: "get-all-states" }
-      const result = await browser.runtime.sendMessage(message)
-      if (cancelled) return
-      if (isResponse(result)) setStates(result)
-    })()
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  // Initial media-activity load (once).
-  useEffect(() => {
-    let cancelled = false
-    void (async () => {
-      const message: ToBackgroundMessage = { type: "get-media-activity" }
-      const result = await browser.runtime.sendMessage(message)
-      if (cancelled) return
-      if (isMediaActivityResponse(result)) setMediaActivity(result)
-    })()
-    return () => {
-      cancelled = true
-    }
-  }, [])
 
   // Keep the tab list fresh while the popup is open.
   useEffect(() => {
@@ -170,13 +181,26 @@ function useTabStates() {
     return () => browser.runtime.onMessage.removeListener(listener)
   }, [])
 
+  // Auto-dismiss the error banner after a short delay.
+  useEffect(() => {
+    if (!error) return
+    const timer = window.setTimeout(() => setError(null), 4000)
+    return () => window.clearTimeout(timer)
+  }, [error])
+
   const send = useCallback(async (message: ToBackgroundMessage) => {
     try {
       await browser.runtime.sendMessage(message)
+      setError(null)
     } catch {
-      // Background may be mid-restart; ignore. State will sync on next refresh.
+      // Background may be mid-restart; surface to the user and ignore.
+      setError(
+        "Couldn't reach the audio engine. Changes may not persist after the popup closes.",
+      )
     }
   }, [])
+
+  const dismissError = useCallback(() => setError(null), [])
 
   const setVolume = useCallback(
     (tabId: number, volume: number) => {
@@ -262,6 +286,9 @@ function useTabStates() {
     setCameraOff,
     reset,
     reloadTab,
+    loaded,
+    error,
+    dismissError,
   }
 }
 

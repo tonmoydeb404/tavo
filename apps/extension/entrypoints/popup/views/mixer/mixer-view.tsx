@@ -1,9 +1,10 @@
-import { IconVolumeOff } from "@tabler/icons-react"
+import { IconAlertTriangle, IconVolumeOff, IconX } from "@tabler/icons-react"
 import { Label } from "@workspace/ui/components/label"
 import { Switch } from "@workspace/ui/components/switch"
 
 import { useTabStates } from "./use-tab-states"
 import { MixerRow } from "./mixer-row"
+import { MixerSkeleton } from "./mixer-skeleton"
 
 function MixerView() {
   const {
@@ -16,24 +17,47 @@ function MixerView() {
     setCameraOff,
     reset,
     reloadTab,
+    loaded,
+    error,
+    dismissError,
   } = useTabStates()
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <header className="flex items-center justify-between">
-        <h1 className="font-heading text-lg font-medium">Audio Tuner</h1>
-        <Label className="text-xs text-muted-foreground">
+      <header className="flex items-center justify-between gap-2">
+        <h1 className="font-heading text-base font-medium">Audio Tuner</h1>
+        <Label className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Switch
             checked={showAll}
             onCheckedChange={setShowAll}
             size="sm"
             aria-label="Show all tabs"
           />
-          Show all tabs
+          All tabs
         </Label>
       </header>
 
-      {rows.length === 0 ? (
+      {error ? (
+        <div
+          role="alert"
+          className="flex items-start gap-2 rounded-lg bg-destructive/10 px-3 py-2 text-xs text-destructive"
+        >
+          <IconAlertTriangle className="mt-0.5 size-3.5 shrink-0" />
+          <span className="flex-1">{error}</span>
+          <button
+            type="button"
+            onClick={dismissError}
+            aria-label="Dismiss notice"
+            className="-m-1 shrink-0 rounded p-1 hover:bg-destructive/20"
+          >
+            <IconX className="size-3.5" />
+          </button>
+        </div>
+      ) : null}
+
+      {!loaded ? (
+        <MixerSkeleton />
+      ) : rows.length === 0 ? (
         <EmptyState audibleOnly={!showAll} />
       ) : (
         <div className="flex flex-col gap-2">
@@ -54,12 +78,10 @@ function MixerView() {
         </div>
       )}
 
-      <footer className="text-center text-[11px] leading-relaxed text-muted-foreground">
-        <p>Volume above 100% may distort. Mute is browser-native.</p>
-        <p>
-          Not working on a tab that was already open? Use its{" "}
-          <span className="font-medium">reload</span> button once.
-        </p>
+      <footer className="flex flex-wrap items-center justify-center gap-1 text-[11px] leading-relaxed text-muted-foreground">
+        <span>Volume above 100% may distort</span>
+        <span aria-hidden="true">·</span>
+        <span>Reload a tab if changes don&rsquo;t take effect</span>
       </footer>
     </div>
   )
@@ -74,7 +96,7 @@ function EmptyState({ audibleOnly }: { audibleOnly: boolean }) {
       </p>
       {audibleOnly ? (
         <p className="text-xs">
-          Toggle &ldquo;Show all tabs&rdquo; to control any tab.
+          Toggle &ldquo;All tabs&rdquo; to control any tab.
         </p>
       ) : null}
     </div>

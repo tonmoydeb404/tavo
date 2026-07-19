@@ -1,22 +1,27 @@
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 
 import {
+  IconLoader,
   IconMicrophone,
   IconMicrophoneOff,
   IconRefresh,
-  IconReload,
+  IconRestore,
   IconVideo,
   IconVideoOff,
   IconVolume,
   IconVolumeOff,
 } from "@tabler/icons-react"
+import { Badge } from "@workspace/ui/components/badge"
 import { Button } from "@workspace/ui/components/button"
 import { Card, CardContent } from "@workspace/ui/components/card"
+import { Separator } from "@workspace/ui/components/separator"
 import { Slider } from "@workspace/ui/components/slider"
 import { cn } from "@workspace/ui/lib/utils"
 
 import { MAX_VOLUME, type MediaActivity, type TabState } from "@/lib/messaging"
 
+import { TooltipButton } from "./tooltip-button"
+import { useToolbarKeyboardNav } from "./use-toolbar-keyboard-nav"
 import type { Tab } from "./use-tab-states"
 
 type MixerRowProps = {
@@ -34,10 +39,15 @@ type MixerRowProps = {
 // Position of the 100% (unity) marker within a 0..MAX_VOLUME slider.
 const UNITY_PERCENT = (100 / MAX_VOLUME) * 100
 
-// A single row in the mixer: favicon + title + audible indicator,
-// volume slider (0..400%) with a 100% unity marker, mute toggle, reset,
-// and a reload-tab button (use when volume isn't taking effect because the
-// tab predates the extension).
+// Visual confirmation window after the user clicks reload. The actual
+// browser.tabs.reload() fires immediately; this just signals "done."
+const RELOAD_FEEDBACK_MS = 1500
+
+// A single tab in the mixer. Vertical 3-row layout:
+//   1. Header — favicon, title, status badges (active / audible)
+//   2. Hero   — volume slider (0..400%) with a 100% unity marker + readout
+//   3. Toolbar— mute (primary) · mic / camera / reset · reload
+// The toolbar implements the WAI-ARIA toolbar pattern with arrow-key nav.
 function MixerRow({
   tab,
   state,
@@ -53,13 +63,17 @@ function MixerRow({
   const safeTabId = tabId ?? -1
   const isAdjusted =
     state.volume !== 100 || state.muted || state.micMuted || state.cameraOff
+  const label = tab.title || tab.url || "Untitled"
+
+  const [reloading, setReloading] = useState(false)
+  const { ref: toolbarRef, onKeyDown } = useToolbarKeyboardNav()
 
   const handleVolume = useCallback(
     (value: number | readonly number[]) => {
       const next = Array.isArray(value) ? (value[0] ?? 0) : value
       onVolumeChange(safeTabId, next)
     },
-    [onVolumeChange, safeTabId]
+    [onVolumeChange, safeTabId],
   )
 
   const handleMuted = useCallback(() => {
@@ -79,16 +93,16 @@ function MixerRow({
   }, [onReset, safeTabId])
 
   const handleReload = useCallback(() => {
+    setReloading(true)
     onReloadTab(safeTabId)
+    window.setTimeout(() => setReloading(false), RELOAD_FEEDBACK_MS)
   }, [onReloadTab, safeTabId])
 
   return (
-    <Card
-      size="sm"
-      className={cn("gap-2", tab.active && "ring-2 ring-primary/60")}
-    >
-      <CardContent>
-        <div className="flex items-center gap-2 px-1">
+    <Card size="sm" className="gap-2.5">
+      <CardContent className="flex flex-col gap-2.5">
+        {/* Row 1: header — favicon + title + status badges */}
+        <div className="flex items-center gap-2">
           {tab.favIconUrl ? (
             <img
               src={tab.favIconUrl}
@@ -100,118 +114,153 @@ function MixerRow({
           ) : (
             <span className="size-4 shrink-0 rounded-sm bg-muted" />
           )}
-
           <span
             className="flex-1 truncate text-sm font-medium"
             title={tab.title ?? tab.url ?? undefined}
           >
-            {tab.title || tab.url || "Untitled"}
+            {label}
           </span>
-
-          {tab.audible ? (
-            <span
-              aria-label="Audible"
-              className="size-2 shrink-0 rounded-full bg-emerald-500"
-              title="Playing audio"
-            />
+          {tab.active ? (
+            <Badge
+              variant="secondary"
+              className="h-5 px-1.5 text-[10px] font-medium"
+            >
+              Active
+            </Badge>
           ) : null}
-
-          <Button
-            variant={state.muted ? "destructive" : "ghost"}
-            size="icon-sm"
-            onClick={handleMuted}
-            aria-label={state.muted ? "Unmute tab" : "Mute tab"}
-            aria-pressed={state.muted}
-            title={state.muted ? "Unmute playback" : "Mute playback"}
-          >
-            {state.muted ? <IconVolumeOff /> : <IconVolume />}
-          </Button>
-          <Button
-            variant={state.micMuted ? "destructive" : "ghost"}
-            size="icon-sm"
-            onClick={handleMic}
-            disabled={!activity.hasMic}
-            aria-label={state.micMuted ? "Unmute mic" : "Mute mic"}
-            aria-pressed={state.micMuted}
-            title={
-              !activity.hasMic
-                ? "No microphone active in this tab"
-                : state.micMuted
-                  ? "Unmute microphone"
-                  : "Mute microphone (requires tab reload if already in a call)"
-            }
-          >
-            {state.micMuted ? <IconMicrophoneOff /> : <IconMicrophone />}
-          </Button>
-          <Button
-            variant={state.cameraOff ? "destructive" : "ghost"}
-            size="icon-sm"
-            onClick={handleCamera}
-            disabled={!activity.hasCamera}
-            aria-label={state.cameraOff ? "Turn camera on" : "Turn camera off"}
-            aria-pressed={state.cameraOff}
-            title={
-              !activity.hasCamera
-                ? "No camera active in this tab"
-                : state.cameraOff
-                  ? "Turn camera on"
-                  : "Turn camera off (requires tab reload if already in a call)"
-            }
-          >
-            {state.cameraOff ? <IconVideoOff /> : <IconVideo />}
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={handleReset}
-            aria-label="Reset volume and mute"
-            title="Reset"
-            disabled={!isAdjusted}
-          >
-            <IconRefresh />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon-sm"
-            onClick={handleReload}
-            aria-label="Reload tab"
-            title="Reload tab (use if volume, mic, or camera isn't taking effect)"
-          >
-            <IconReload />
-          </Button>
+          {tab.audible ? (
+            <Badge
+              variant="secondary"
+              className="gap-1 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+            >
+              <span
+                className="size-1.5 rounded-full bg-emerald-500"
+                aria-hidden="true"
+              />
+              Audible
+            </Badge>
+          ) : null}
         </div>
 
-        <div className="flex items-center gap-3 px-1">
+        {/* Row 2: hero slider with 100% unity marker + readout */}
+        <div className="flex items-center gap-3">
           <div className="relative flex flex-1 items-center">
             <Slider
               min={0}
               max={MAX_VOLUME}
               value={[state.volume]}
               onValueChange={handleVolume}
-              aria-label={`Volume for ${tab.title ?? "tab"}`}
+              aria-label={`Volume for ${label}`}
+              aria-valuetext={`${state.volume} percent`}
               className={cn(
                 "flex-1",
                 state.volume > 100 &&
-                  "[&_[data-slot=slider-range]]:bg-amber-500"
+                  "[&_[data-slot=slider-range]]:bg-amber-500",
               )}
             />
             {/* Unity (100%) marker */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute top-1/2 z-10 h-2 w-px -translate-y-1/2 bg-foreground/40"
+              className="pointer-events-none absolute top-1/2 z-10 h-2.5 w-px -translate-y-1/2 bg-foreground/40"
               style={{ left: `${UNITY_PERCENT}%` }}
-              title="Original volume (100%)"
             />
           </div>
           <span
             className={cn(
               "w-12 shrink-0 text-right text-xs tabular-nums",
               state.volume > 100 && "font-semibold text-amber-600",
-              state.volume === 0 && "text-muted-foreground"
+              state.volume === 0 && "text-muted-foreground",
             )}
           >
             {state.volume}%
           </span>
+        </div>
+
+        {/* Row 3: toolbar — mute (primary) | mic · camera · reset | reload */}
+        <div
+          ref={toolbarRef}
+          role="toolbar"
+          aria-label={`Controls for ${label}`}
+          onKeyDown={onKeyDown}
+          className="flex items-center gap-1"
+        >
+          <Button
+            variant={state.muted ? "destructive" : "secondary"}
+            size="sm"
+            onClick={handleMuted}
+            aria-label={state.muted ? "Unmute tab" : "Mute tab"}
+            aria-pressed={state.muted}
+            className="min-w-16 flex-1"
+          >
+            {state.muted ? <IconVolumeOff /> : <IconVolume />}
+            {state.muted ? "Muted" : "Mute"}
+          </Button>
+          <Separator orientation="vertical" className="mx-0.5 h-6" />
+          <TooltipButton
+            variant={state.micMuted ? "destructive" : "ghost"}
+            size="icon-sm"
+            onClick={handleMic}
+            disabled={!activity.hasMic}
+            aria-label={state.micMuted ? "Unmute mic" : "Mute mic"}
+            aria-pressed={state.micMuted}
+            tooltip={
+              !activity.hasMic
+                ? "No microphone active in this tab"
+                : state.micMuted
+                  ? "Unmute microphone"
+                  : "Mute microphone (tab reload needed if already in a call)"
+            }
+          >
+            {state.micMuted ? <IconMicrophoneOff /> : <IconMicrophone />}
+          </TooltipButton>
+          <TooltipButton
+            variant={state.cameraOff ? "destructive" : "ghost"}
+            size="icon-sm"
+            onClick={handleCamera}
+            disabled={!activity.hasCamera}
+            aria-label={
+              state.cameraOff ? "Turn camera on" : "Turn camera off"
+            }
+            aria-pressed={state.cameraOff}
+            tooltip={
+              !activity.hasCamera
+                ? "No camera active in this tab"
+                : state.cameraOff
+                  ? "Turn camera on"
+                  : "Turn camera off (tab reload needed if already in a call)"
+            }
+          >
+            {state.cameraOff ? <IconVideoOff /> : <IconVideo />}
+          </TooltipButton>
+          <TooltipButton
+            variant="ghost"
+            size="icon-sm"
+            onClick={handleReset}
+            aria-label="Reset volume and mute"
+            disabled={!isAdjusted}
+            tooltip={
+              isAdjusted
+                ? "Reset to defaults (100% volume, unmuted)"
+                : "Already at defaults"
+            }
+          >
+            <IconRestore />
+          </TooltipButton>
+          <Separator orientation="vertical" className="mx-0.5 h-6" />
+          <TooltipButton
+            variant="ghost"
+            size="icon-sm"
+            onClick={handleReload}
+            aria-label="Reload tab"
+            disabled={reloading}
+            tooltip="Reload tab — use if volume, mic, or camera isn't taking effect"
+          >
+            {reloading ? (
+              <IconLoader className="animate-spin" />
+            ) : (
+              <IconRefresh />
+            )}
+          </TooltipButton>
         </div>
       </CardContent>
     </Card>
