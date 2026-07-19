@@ -19,4 +19,7 @@ export default defineConfig({
   autoIcons: {
     baseIconPath: "assets/icon.svg",
   },
+  zip: {
+    name: brand.name,
+  },
 })
