@@ -5,7 +5,7 @@
       "source": "belt-sh/cli",
       "sourceType": "github",
       "skillPath": ".agents/skills/belt/SKILL.md",
-      "computedHash": "49d07aca8deb1f9ada4273c6e065a17219d335b1e7bdf7b11e59f2da6192497c"
+      "computedHash": "ca4ce5eac764749f1f0cc67a94d464c3f66ba687bc9fa315949174770e5fc172"
     },
     "chrome-extension-ui": {
       "source": "pproenca/dot-skills",
@@ -23,7 +23,7 @@
       "source": "googlechrome/modern-web-guidance",
       "sourceType": "github",
       "skillPath": "skills/chrome-extensions/SKILL.md",
-      "computedHash": "64369232df72f529dc168b6c0767a7636d78e1e9a7033b1e5ce9a2aac966a721"
+      "computedHash": "1373f573799adad2a98c158b0c1a068e9f3bdef07c728b55b2be3f1c8ae0c2b0"
     },
     "copywriting": {
       "source": "coreyhaines31/marketingskills",
