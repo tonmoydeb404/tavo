@@ -2,7 +2,7 @@
   "name": "@workspace/extension",
   "description": "Mute tabs and adjust per-tab volume (0-400%) for any playing audio or video.",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "license": "MIT",
   "author": "tonmoydeb404",
