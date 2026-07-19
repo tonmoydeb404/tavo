@@ -1,10 +1,10 @@
 import { IconAlertTriangle, IconVolumeOff, IconX } from "@tabler/icons-react"
+import { MixerRow } from "@workspace/ui/cards/mixer-row"
 import { Label } from "@workspace/ui/components/label"
 import { Switch } from "@workspace/ui/components/switch"
 
-import { useTabStates } from "./use-tab-states"
-import { MixerRow } from "./mixer-row"
 import { MixerSkeleton } from "./mixer-skeleton"
+import { useTabStates } from "./use-tab-states"
 
 function MixerView() {
   const {
@@ -25,12 +25,11 @@ function MixerView() {
   return (
     <div className="flex w-full flex-col gap-3">
       <header className="flex items-center justify-between gap-2">
-        <h1 className="font-heading text-base font-medium">Audio Tuner</h1>
+        <h1 className="font-heading text-base font-medium">Tavo</h1>
         <Label className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <Switch
             checked={showAll}
             onCheckedChange={setShowAll}
-            size="sm"
             aria-label="Show all tabs"
           />
           All tabs

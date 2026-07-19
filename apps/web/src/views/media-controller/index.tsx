@@ -1,47 +1,32 @@
+import { IconAdjustmentsHorizontal } from "@tabler/icons-react"
+
+import { CtaSection, HeroSection } from "@/components/sections"
+import { pathsConfig } from "@/configs/path-config"
 import {
   FaqSection,
   FeaturesSection,
-  FinalCtaSection,
   HowItWorksSection,
-  IntroSection,
   WhyControllerSection,
 } from "./sections"
 
-import { JsonLd, breadcrumbSchema, faqPageSchema, webApplicationSchema } from "@/seo"
-import { faqs } from "./sections/faq-section"
-import { pathsConfig } from "@/configs/path-config"
-import { siteConfig } from "@/configs/site-config"
-
 function MediaControllerView() {
-  const base = siteConfig.brand.url
-  const url = `${base}${pathsConfig.mediaController}`
-
-  const schemas = [
-    webApplicationSchema({
-      name: "Audio Tuner — Media Controller",
-      url,
-      description:
-        "Per-tab media controller for Chrome, Edge, and Brave. Mute and boost any tab's volume to 400%, and toggle your mic and webcam, one tab at a time.",
-    }),
-    faqPageSchema(faqs),
-    breadcrumbSchema([
-      { name: "Home", url: base },
-      { name: "Media Controller", url },
-    ]),
-  ]
-
   return (
     <>
-      {schemas.map((schema) => (
-        <JsonLd key={schema["@type"]} schema={schema} />
-      ))}
-
-      <IntroSection />
+      <HeroSection
+        badgeIcon={IconAdjustmentsHorizontal}
+        badgeText="Media controller for Chrome"
+        title="A media controller for every browser tab"
+        description="Mute and boost any tab's volume to 400%, and flip your mic and webcam on or off — per tab, from one toolbar controller. For Chrome, Edge, and Brave."
+        secondaryCta={{
+          href: pathsConfig.features,
+          label: "See all features",
+        }}
+      />
       <WhyControllerSection />
       <FeaturesSection />
       <HowItWorksSection />
       <FaqSection />
-      <FinalCtaSection />
+      <CtaSection />
     </>
   )
 }

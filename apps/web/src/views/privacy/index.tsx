@@ -1,3 +1,8 @@
+import { IconShieldLock } from "@tabler/icons-react"
+import Link from "next/link"
+
+import { HeroSection } from "@/components/sections"
+import { pathsConfig } from "@/configs/path-config"
 import { siteConfig } from "@/configs/site-config"
 
 type Section = {
@@ -26,10 +31,10 @@ const sections: Section[] = [
     ],
   },
   {
-    heading: "Information we collect",
+    heading: "Information I collect",
     body: [
-      "We don't collect personal information through the extension. We don't add accounts, analytics SDKs, or tracking pixels to it, and there is no backend for the extension to talk to.",
-      "This website doesn't require an account either. If we add basic, privacy-friendly analytics in the future, this page will say so and name the tool.",
+      "I don't collect personal information through the extension. I don't add accounts, analytics SDKs, or tracking pixels to it, and there is no backend for the extension to talk to.",
+      "This website doesn't require an account either. If I add basic, privacy-friendly analytics in the future, this page will say so and name the tool.",
     ],
   },
   {
@@ -54,13 +59,13 @@ const sections: Section[] = [
   {
     heading: "Where settings are stored",
     body: [
-      "Your per-tab volume, mute, mic, and camera settings are stored in the browser's session storage. They live only on your device and are cleared when you close the browser. Nothing about your settings is sent to us.",
+      "Your per-tab volume, mute, mic, and camera settings are stored in the browser's session storage. They live only on your device and are cleared when you close the browser. Nothing about your settings is sent to me.",
     ],
   },
   {
     heading: "Cookies and the website",
     body: [
-      "This website doesn't use tracking or advertising cookies. Standard web infrastructure may set essential cookies needed to serve the pages. We don't run third-party analytics or ad networks on the site.",
+      "This website doesn't use tracking or advertising cookies. Standard web infrastructure may set essential cookies needed to serve the pages. I don't run third-party analytics or ad networks on the site.",
     ],
   },
   {
@@ -72,76 +77,98 @@ const sections: Section[] = [
   {
     heading: "Data retention",
     body: [
-      "There's nothing to retain. The extension stores your settings only for the current session, and they're wiped when the browser closes. With no server, there's no long-term storage on our side.",
+      "There's nothing to retain. The extension stores your settings only for the current session, and they're wiped when the browser closes. With no server, there's no long-term storage on my side.",
     ],
   },
   {
     heading: "Your rights",
     body: [
-      "Because we don't collect or store personal information about you, there's no data of yours for us to access, export, or delete. You're always in control: closing the browser clears your session settings, and removing the extension clears everything. If you have a specific request, contact us and we'll help.",
+      "Because I don't collect or store personal information about you, there's no data of yours for me to access, export, or delete. You're always in control: closing the browser clears your session settings, and removing the extension clears everything. If you have a specific request, contact me and I'll help.",
     ],
   },
   {
     heading: "Children",
     body: [
-      "Audio Tuner isn't directed at children, and we don't knowingly collect information from anyone under 16. The extension doesn't collect information from anyone at all.",
+      "Audio Tuner isn't directed at children, and I don't knowingly collect information from anyone under 16. The extension doesn't collect information from anyone at all.",
     ],
   },
   {
     heading: "Changes to this policy",
     body: [
-      "If we change this policy, we'll post the updated version here with a new last-updated date.",
+      "If I change this policy, I'll post the updated version here with a new last-updated date.",
     ],
   },
 ]
 
 export const PrivacyView = () => {
   return (
-    <main className="container py-20">
-      <div className="flex flex-col gap-8">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold tracking-tight">Privacy Policy</h1>
-          <p className="text-sm text-muted-foreground">
-            Last updated: {lastUpdated}
-          </p>
+    <>
+      <HeroSection
+        badgeIcon={IconShieldLock}
+        badgeText="Privacy"
+        title="Privacy Policy"
+        description="How Audio Tuner handles your data. The short version: it doesn't. No account, no analytics, no servers — per-tab settings live only in your browser's session storage."
+      >
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+          <span>Last updated: {lastUpdated}</span>
+          <span aria-hidden="true">·</span>
+          <Link
+            href={pathsConfig.terms}
+            className="underline underline-offset-4 hover:text-foreground"
+          >
+            Terms of Service
+          </Link>
+          <span aria-hidden="true">·</span>
+          <a
+            href={`mailto:${siteConfig.links.email}`}
+            className="underline underline-offset-4 hover:text-foreground"
+          >
+            Contact
+          </a>
         </div>
+      </HeroSection>
+      <main className="container py-20">
+        <div className="flex flex-col gap-8">
+          {sections.map((section) => (
+            <section key={section.heading} className="flex flex-col gap-3">
+              <h2 className="text-xl font-semibold tracking-tight">
+                {section.heading}
+              </h2>
+              {section.body?.map((paragraph, index) => (
+                <p
+                  key={index}
+                  className="leading-relaxed text-muted-foreground"
+                >
+                  {paragraph}
+                </p>
+              ))}
+              {section.bullets ? (
+                <ul className="flex list-disc flex-col gap-2 pl-5 text-muted-foreground">
+                  {section.bullets.map((bullet, index) => (
+                    <li key={index} className="leading-relaxed">
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </section>
+          ))}
 
-        {sections.map((section) => (
-          <section key={section.heading} className="flex flex-col gap-3">
-            <h2 className="text-xl font-semibold tracking-tight">
-              {section.heading}
-            </h2>
-            {section.body?.map((paragraph, index) => (
-              <p key={index} className="leading-relaxed text-muted-foreground">
-                {paragraph}
-              </p>
-            ))}
-            {section.bullets ? (
-              <ul className="flex list-disc flex-col gap-2 pl-5 text-muted-foreground">
-                {section.bullets.map((bullet, index) => (
-                  <li key={index} className="leading-relaxed">
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+          <section className="flex flex-col gap-2">
+            <h2 className="text-xl font-semibold tracking-tight">Contact</h2>
+            <p className="leading-relaxed text-muted-foreground">
+              If you have questions about this Privacy Policy, contact me at{" "}
+              <a
+                href={`mailto:${siteConfig.links.email}`}
+                className="text-foreground underline underline-offset-4"
+              >
+                {siteConfig.links.email}
+              </a>
+              .
+            </p>
           </section>
-        ))}
-
-        <section className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">Contact</h2>
-          <p className="leading-relaxed text-muted-foreground">
-            If you have questions about this Privacy Policy, contact us at{" "}
-            <a
-              href={`mailto:${siteConfig.links.email}`}
-              className="text-foreground underline underline-offset-4"
-            >
-              {siteConfig.links.email}
-            </a>
-            .
-          </p>
-        </section>
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   )
 }

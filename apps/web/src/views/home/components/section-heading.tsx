@@ -24,22 +24,22 @@ function SectionHeading({
         "flex flex-col gap-3",
         align === "center" && "items-center text-center",
         align === "left" && "items-start text-left",
-        className,
+        className
       )}
     >
       {eyebrow ? (
-        <Badge variant="secondary" className="uppercase tracking-wide">
+        <Badge variant="secondary" className="tracking-wide uppercase">
           {eyebrow}
         </Badge>
       ) : null}
-      <h2 className="max-w-2xl font-heading text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+      <h2 className="font-heading max-w-2xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
         {title}
       </h2>
       {description ? (
         <p
           className={cn(
             "max-w-2xl text-base text-pretty text-muted-foreground sm:text-lg",
-            align === "center" && "mx-auto",
+            align === "center" && "mx-auto"
           )}
         >
           {description}

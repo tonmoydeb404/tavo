@@ -39,9 +39,6 @@
   --sidebar-accent-foreground: oklch(0.2376 0.0036 345.5321);
   --sidebar-border: oklch(0.8779 0.0458 57.4463);
   --sidebar-ring: oklch(0.6559 0.2328 34.5244);
-  --font-sans: "Amaranth", ui-sans-serif, sans-serif, system-ui;
-  --font-serif: "Noto Serif", ui-serif, serif;
-  --font-mono: "JetBrains Mono", "Courier New", monospace;
   --radius: 0.5rem;
   --shadow-x: 0;
   --shadow-y: 1px;
@@ -104,9 +101,6 @@
   --sidebar-accent-foreground: oklch(0.9592 0.0288 72.4798);
   --sidebar-border: oklch(0.3613 0.0128 25.3155);
   --sidebar-ring: oklch(0.6559 0.2328 34.5244);
-  --font-sans: "Amaranth", ui-sans-serif, sans-serif, system-ui;
-  --font-serif: "Noto Serif", ui-serif, serif;
-  --font-mono: "JetBrains Mono", "Courier New", monospace;
   --radius: 0.5rem;
   --shadow-x: 0;
   --shadow-y: 1px;
@@ -164,8 +158,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
+  --font-heading: var(--font-heading);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

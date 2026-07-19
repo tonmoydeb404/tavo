@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 
 import { pathsConfig } from "@/configs/path-config"
-import { HelpView } from "@/views/help"
+import { JsonLd, faqPageSchema } from "@/seo"
+import { faqs, HelpView } from "@/views/help"
 
 const title = "Help & Docs — Audio Tuner"
 const description =
@@ -22,5 +23,10 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <HelpView />
+  return (
+    <>
+      <JsonLd schema={faqPageSchema(faqs)} />
+      <HelpView />
+    </>
+  )
 }

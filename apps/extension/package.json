@@ -16,6 +16,9 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "@fontsource/amaranth": "^5.2.8",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/noto-serif": "^5.2.9",
     "@tabler/icons-react": "^3.44.0",
     "@workspace/ui": "workspace:*",
     "react": "^19.2.4",
@@ -25,6 +28,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@workspace/eslint-config": "workspace:*",
+    "@wxt-dev/auto-icons": "^1.1.1",
     "@wxt-dev/module-react": "^1.1.5",
     "eslint": "^9",
     "typescript": "^5.9.3",

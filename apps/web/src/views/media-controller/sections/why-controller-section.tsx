@@ -27,9 +27,9 @@ function WhyControllerSection() {
         <p>
           Volume runs through the{" "}
           <strong className="text-foreground">Web Audio API</strong>, so a quiet
-          tab can be pushed past 100% up to 400% without touching anything
-          else. Mic and camera toggles block that tab&apos;s access to your
-          hardware, instantly, regardless of what the site expects.
+          tab can be pushed past 100% up to 400% without touching anything else.
+          Mic and camera toggles block that tab&apos;s access to your hardware,
+          instantly, regardless of what the site expects.
         </p>
 
         <p>

@@ -1,6 +1,4 @@
 export * from "./features-section"
-export * from "./final-cta-section"
 export * from "./faq-section"
 export * from "./how-it-works-section"
-export * from "./intro-section"
 export * from "./why-controller-section"

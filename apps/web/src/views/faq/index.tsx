@@ -1,3 +1,4 @@
+import { IconDownload, IconMessageQuestion } from "@tabler/icons-react"
 import {
   Accordion,
   AccordionContent,
@@ -6,9 +7,10 @@ import {
 } from "@workspace/ui/components/accordion"
 import Link from "next/link"
 
+import { HeroSection } from "@/components/sections"
 import { pathsConfig } from "@/configs/path-config"
 import { siteConfig } from "@/configs/site-config"
-import { JsonLd, faqPageSchema } from "@/seo"
+import { Fragment } from "react"
 
 type Faq = { question: string; answer: string }
 type FaqGroup = { category: string; items: Faq[] }
@@ -116,83 +118,92 @@ const allFaqs = groups.flatMap((group) => group.items)
 
 function FaqView() {
   return (
-    <main className="container py-20">
-      <JsonLd schema={faqPageSchema(allFaqs)} />
-
-      <div className="flex flex-col gap-10">
-        <header className="flex flex-col gap-3">
-          <h1 className="font-heading text-4xl font-bold tracking-tight">
-            Frequently asked questions
-          </h1>
-          <p className="max-w-2xl text-lg text-pretty text-muted-foreground">
-            Everything you might want to know about Audio Tuner — volume, boost,
-            mic, webcam, and privacy. Skip to a category below.
-          </p>
-          <div className="flex flex-wrap gap-2 pt-2 text-sm">
-            {groups.map((group) => (
-              <a
-                key={group.category}
+    <>
+      <HeroSection
+        badgeIcon={IconMessageQuestion}
+        badgeText="FAQ"
+        title="Frequently asked questions"
+        description="Everything you might want to know about Audio Tuner — volume, boost, mic, webcam, and privacy. Skip to a category below."
+        primaryCta={{
+          href: siteConfig.links.cta,
+          label: "Add to Chrome — free",
+          icon: IconDownload,
+        }}
+        secondaryCta={{
+          href: pathsConfig.features,
+          label: "Browse features",
+        }}
+      >
+        <div className="flex flex-wrap gap-2 pt-2 text-sm">
+          {groups.map((group) => (
+            <Fragment key={group.category}>
+              <Link
                 href={`#${group.category}`}
                 className="text-muted-foreground underline underline-offset-4 hover:text-foreground"
               >
                 {group.category}
-              </a>
-            ))}
-          </div>
-        </header>
+              </Link>
 
-        {groups.map((group) => (
-          <section
-            key={group.category}
-            id={group.category}
-            className="flex scroll-mt-24 flex-col gap-4"
-          >
+              <span className="text-muted-foreground/40">·</span>
+            </Fragment>
+          ))}
+        </div>
+      </HeroSection>
+      <main className="container py-20">
+        <div className="flex flex-col gap-10">
+          {groups.map((group) => (
+            <section
+              key={group.category}
+              id={group.category}
+              className="flex scroll-mt-24 flex-col gap-4"
+            >
+              <h2 className="font-heading text-2xl font-semibold tracking-tight">
+                {group.category}
+              </h2>
+              <Accordion>
+                {group.items.map((faq, index) => (
+                  <AccordionItem
+                    key={faq.question}
+                    value={`${group.category}-${index}`}
+                  >
+                    <AccordionTrigger className="text-base">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </section>
+          ))}
+
+          <section className="flex flex-col items-start gap-4 rounded-2xl border border-border/60 bg-muted/30 p-6">
             <h2 className="font-heading text-2xl font-semibold tracking-tight">
-              {group.category}
+              Still have questions?
             </h2>
-            <Accordion>
-              {group.items.map((faq, index) => (
-                <AccordionItem
-                  key={faq.question}
-                  value={`${group.category}-${index}`}
-                >
-                  <AccordionTrigger className="text-base">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Browse the full{" "}
+              <Link
+                href={pathsConfig.features}
+                className="text-foreground underline underline-offset-4"
+              >
+                feature list
+              </Link>
+              , or reach me at{" "}
+              <a
+                href={`mailto:${siteConfig.links.email}`}
+                className="text-foreground underline underline-offset-4"
+              >
+                {siteConfig.links.email}
+              </a>
+              .
+            </p>
           </section>
-        ))}
-
-        <section className="flex flex-col items-start gap-4 rounded-2xl border border-border/60 bg-muted/30 p-6">
-          <h2 className="font-heading text-2xl font-semibold tracking-tight">
-            Still have questions?
-          </h2>
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            Browse the full{" "}
-            <Link
-              href={pathsConfig.features}
-              className="text-foreground underline underline-offset-4"
-            >
-              feature list
-            </Link>
-            , or reach the team at{" "}
-            <a
-              href={`mailto:${siteConfig.links.email}`}
-              className="text-foreground underline underline-offset-4"
-            >
-              {siteConfig.links.email}
-            </a>
-            .
-          </p>
-        </section>
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   )
 }
 
-export { FaqView }
+export { allFaqs as faqs, FaqView }

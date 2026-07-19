@@ -1,7 +1,7 @@
 function ProblemSection() {
   return (
-    <section className="container max-w-3xl py-20 text-center sm:py-24">
-      <p className="text-xl font-medium text-pretty text-muted-foreground sm:text-2xl">
+    <section className="container max-w-3xl py-20 text-center sm:py-24 lg:max-w-4xl">
+      <p className="font-heading text-xl font-medium text-pretty text-muted-foreground sm:text-2xl lg:text-3xl">
         Mute one tab and Chrome silences every other tab on that site. A meeting
         where you can&apos;t find the mic button. A webcam you can&apos;t turn
         off without digging through the site.{" "}

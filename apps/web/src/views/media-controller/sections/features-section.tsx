@@ -6,7 +6,7 @@ import {
 } from "@tabler/icons-react"
 import type { ComponentType } from "react"
 
-import { Card } from "@workspace/ui/components/card"
+import { IconCard } from "@workspace/ui/components/icon-card"
 
 import { SectionHeading } from "@/views/home/components"
 
@@ -55,17 +55,12 @@ function FeaturesSection() {
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2">
           {features.map((feature) => (
-            <Card key={feature.title} className="gap-4 p-6">
-              <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <feature.icon className="size-6" />
-              </span>
-              <h3 className="font-heading text-lg font-semibold tracking-tight">
-                {feature.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {feature.description}
-              </p>
-            </Card>
+            <IconCard
+              key={feature.title}
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+            />
           ))}
         </div>
       </div>

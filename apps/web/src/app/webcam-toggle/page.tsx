@@ -1,7 +1,15 @@
 import type { Metadata } from "next"
 
 import { pathsConfig } from "@/configs/path-config"
+import { siteConfig } from "@/configs/site-config"
+import {
+  JsonLd,
+  breadcrumbSchema,
+  faqPageSchema,
+  webApplicationSchema,
+} from "@/seo"
 import { WebcamToggleView } from "@/views/webcam-toggle"
+import { faqs } from "@/views/webcam-toggle/sections"
 
 const title = "Webcam Toggle for Chrome — Turn Off Any Tab's Camera"
 const description =
@@ -22,5 +30,29 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <WebcamToggleView />
+  const base = siteConfig.brand.url
+  const url = `${base}${pathsConfig.webcamToggle}`
+
+  const schemas = [
+    webApplicationSchema({
+      name: "Audio Tuner — Webcam Toggle",
+      url,
+      description:
+        "Per-tab webcam toggle for Chrome, Edge, and Brave. Turn off any tab's camera from the toolbar, without hunting for each site's camera button.",
+    }),
+    faqPageSchema(faqs),
+    breadcrumbSchema([
+      { name: "Home", url: base },
+      { name: "Webcam Toggle", url },
+    ]),
+  ]
+
+  return (
+    <>
+      {schemas.map((schema) => (
+        <JsonLd key={schema["@type"]} schema={schema} />
+      ))}
+      <WebcamToggleView />
+    </>
+  )
 }

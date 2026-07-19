@@ -2,6 +2,7 @@ import {
   IconAdjustments,
   IconAlertCircle,
   IconDownload,
+  IconLifebuoy,
   IconMicrophone,
   IconPin,
   IconVideo,
@@ -9,11 +10,11 @@ import {
   IconVolumeOff,
 } from "@tabler/icons-react"
 import Link from "next/link"
-import type { ComponentType } from "react"
+import { Fragment, type ComponentType } from "react"
 
+import { HeroSection } from "@/components/sections"
 import { pathsConfig } from "@/configs/path-config"
 import { siteConfig } from "@/configs/site-config"
-import { JsonLd, faqPageSchema } from "@/seo"
 import { buttonVariants } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
 
@@ -124,190 +125,189 @@ const faqs: Faq[] = [
   {
     question: "Where do I report a bug or request a feature?",
     answer:
-      "Open an issue on the GitHub repository. We are a small team and read every issue, though we cannot promise a timeline on fixes or new features.",
+      "Open an issue on the GitHub repository. I read every issue, though I cannot promise a timeline on fixes or new features.",
+  },
+]
+
+const links: { label: string; href: string }[] = [
+  {
+    label: "Install",
+    href: "#install",
+  },
+  {
+    label: "Controls",
+    href: "#controls",
+  },
+  {
+    label: "Troubleshooting",
+    href: "#troubleshooting",
+  },
+  {
+    label: "FAQ",
+    href: "#faq",
   },
 ]
 
 function HelpView() {
   return (
-    <main className="container py-20">
-      <JsonLd schema={faqPageSchema(faqs)} />
-
-      <div className="flex flex-col gap-12">
-        <header className="flex flex-col gap-3">
-          <h1 className="font-heading text-4xl font-bold tracking-tight">
-            {siteConfig.brand.name} Help
-          </h1>
-          <p className="max-w-2xl text-lg text-pretty text-muted-foreground">
-            Everything you need to install, pin, and use the per-tab media
-            controller — volume, mic, and webcam. Skip ahead with the links
-            below.
-          </p>
-          <div className="flex flex-wrap gap-2 pt-2 text-sm">
-            <a
-              href="#install"
-              className="text-muted-foreground underline underline-offset-4 hover:text-foreground"
-            >
-              Install
-            </a>
-            <span className="text-muted-foreground/40">·</span>
-            <a
-              href="#controls"
-              className="text-muted-foreground underline underline-offset-4 hover:text-foreground"
-            >
-              Controls
-            </a>
-            <span className="text-muted-foreground/40">·</span>
-            <a
-              href="#troubleshooting"
-              className="text-muted-foreground underline underline-offset-4 hover:text-foreground"
-            >
-              Troubleshooting
-            </a>
-            <span className="text-muted-foreground/40">·</span>
-            <a
-              href="#faq"
-              className="text-muted-foreground underline underline-offset-4 hover:text-foreground"
-            >
-              FAQ
-            </a>
-          </div>
-        </header>
-
-        <section id="install" className="flex scroll-mt-24 flex-col gap-6">
-          <h2 className="font-heading text-2xl font-semibold tracking-tight">
-            Getting started
-          </h2>
-          <div className="flex flex-col gap-5">
-            {setupSteps.map((step) => (
-              <div
-                key={step.title}
-                className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card p-6 sm:flex-row"
+    <>
+      <HeroSection
+        badgeIcon={IconLifebuoy}
+        badgeText="Help"
+        title={`${siteConfig.brand.name} Help`}
+        description="Everything you need to install, pin, and use the per-tab media controller — volume, mic, and webcam. Skip ahead with the links below."
+      >
+        <div className="flex flex-wrap gap-2 pt-2 text-sm">
+          {links.map((link) => (
+            <Fragment key={link.label}>
+              <Link
+                href={link.href}
+                className="text-muted-foreground underline underline-offset-4 hover:text-foreground"
               >
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <step.icon className="size-5" />
-                </span>
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-heading text-lg font-semibold tracking-tight">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    {step.body}
-                  </p>
+                {link.label}
+              </Link>
+              <span className="text-muted-foreground/40">·</span>
+            </Fragment>
+          ))}
+        </div>
+      </HeroSection>
+      <main className="container py-20">
+        <div className="flex flex-col gap-12">
+          <section id="install" className="flex scroll-mt-24 flex-col gap-6">
+            <h2 className="font-heading text-2xl font-semibold tracking-tight">
+              Getting started
+            </h2>
+            <div className="flex flex-col gap-5">
+              {setupSteps.map((step) => (
+                <div
+                  key={step.title}
+                  className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card p-6 sm:flex-row"
+                >
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <step.icon className="size-5" />
+                  </span>
+                  <div className="flex flex-col gap-2">
+                    <h3 className="font-heading text-lg font-semibold tracking-tight">
+                      {step.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {step.body}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
 
-        <section id="controls" className="flex scroll-mt-24 flex-col gap-6">
-          <h2 className="font-heading text-2xl font-semibold tracking-tight">
-            Controller controls
-          </h2>
-          <div className="flex flex-col gap-5">
-            {controls.map((control) => (
-              <div
-                key={control.title}
-                className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card p-6 sm:flex-row"
-              >
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <control.icon className="size-5" />
-                </span>
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-heading text-lg font-semibold tracking-tight">
-                    {control.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    {control.body}
-                  </p>
+          <section id="controls" className="flex scroll-mt-24 flex-col gap-6">
+            <h2 className="font-heading text-2xl font-semibold tracking-tight">
+              Controller controls
+            </h2>
+            <div className="flex flex-col gap-5">
+              {controls.map((control) => (
+                <div
+                  key={control.title}
+                  className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card p-6 sm:flex-row"
+                >
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <control.icon className="size-5" />
+                  </span>
+                  <div className="flex flex-col gap-2">
+                    <h3 className="font-heading text-lg font-semibold tracking-tight">
+                      {control.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {control.body}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
 
-        <section
-          id="troubleshooting"
-          className="flex scroll-mt-24 flex-col gap-6"
-        >
-          <h2 className="font-heading text-2xl font-semibold tracking-tight">
-            Troubleshooting
-          </h2>
-          <div className="flex flex-col gap-5">
-            {troubleshooting.map((item) => (
-              <div
-                key={item.title}
-                className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card p-6 sm:flex-row"
-              >
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <item.icon className="size-5" />
-                </span>
-                <div className="flex flex-col gap-2">
-                  <h3 className="font-heading text-lg font-semibold tracking-tight">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    {item.body}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section id="faq" className="flex scroll-mt-24 flex-col gap-6">
-          <h2 className="font-heading text-2xl font-semibold tracking-tight">
-            Frequently asked questions
-          </h2>
-          <div className="flex flex-col gap-5">
-            {faqs.map((faq) => (
-              <div
-                key={faq.question}
-                className="flex flex-col gap-2 rounded-2xl border border-border/60 bg-card p-6"
-              >
-                <h3 className="font-heading text-base font-semibold tracking-tight">
-                  {faq.question}
-                </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {faq.answer}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="flex flex-col items-start gap-4 rounded-2xl border border-border/60 bg-muted/30 p-6">
-          <h2 className="font-heading text-2xl font-semibold tracking-tight">
-            Still need help?
-          </h2>
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            Open an issue on{" "}
-            <Link
-              href={siteConfig.links.github}
-              className="text-foreground underline underline-offset-4"
-            >
-              GitHub
-            </Link>{" "}
-            or email{" "}
-            <a
-              href={`mailto:${siteConfig.links.email}`}
-              className="text-foreground underline underline-offset-4"
-            >
-              {siteConfig.links.email}
-            </a>
-            .
-          </p>
-          <Link
-            href={pathsConfig.mediaController}
-            className={cn(buttonVariants())}
+          <section
+            id="troubleshooting"
+            className="flex scroll-mt-24 flex-col gap-6"
           >
-            <IconDownload className="size-4" />
-            Get Audio Tuner
-          </Link>
-        </section>
-      </div>
-    </main>
+            <h2 className="font-heading text-2xl font-semibold tracking-tight">
+              Troubleshooting
+            </h2>
+            <div className="flex flex-col gap-5">
+              {troubleshooting.map((item) => (
+                <div
+                  key={item.title}
+                  className="flex flex-col gap-3 rounded-2xl border border-border/60 bg-card p-6 sm:flex-row"
+                >
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <item.icon className="size-5" />
+                  </span>
+                  <div className="flex flex-col gap-2">
+                    <h3 className="font-heading text-lg font-semibold tracking-tight">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-muted-foreground">
+                      {item.body}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section id="faq" className="flex scroll-mt-24 flex-col gap-6">
+            <h2 className="font-heading text-2xl font-semibold tracking-tight">
+              Frequently asked questions
+            </h2>
+            <div className="flex flex-col gap-5">
+              {faqs.map((faq) => (
+                <div
+                  key={faq.question}
+                  className="flex flex-col gap-2 rounded-2xl border border-border/60 bg-card p-6"
+                >
+                  <h3 className="font-heading text-base font-semibold tracking-tight">
+                    {faq.question}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    {faq.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="flex flex-col items-start gap-4 rounded-2xl border border-border/60 bg-muted/30 p-6">
+            <h2 className="font-heading text-2xl font-semibold tracking-tight">
+              Still need help?
+            </h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Open an issue on{" "}
+              <Link
+                href={siteConfig.links.github}
+                className="text-foreground underline underline-offset-4"
+              >
+                GitHub
+              </Link>{" "}
+              or email{" "}
+              <a
+                href={`mailto:${siteConfig.links.email}`}
+                className="text-foreground underline underline-offset-4"
+              >
+                {siteConfig.links.email}
+              </a>
+              .
+            </p>
+            <Link
+              href={pathsConfig.mediaController}
+              className={cn(buttonVariants())}
+            >
+              <IconDownload className="size-4" />
+              Get Audio Tuner
+            </Link>
+          </section>
+        </div>
+      </main>
+    </>
   )
 }
 
-export { HelpView }
+export { faqs, HelpView }

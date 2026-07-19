@@ -13,20 +13,15 @@ import { BrowserMockup } from "../components"
 
 function HeroSection() {
   return (
-    <section className="relative isolate bg-muted pt-10">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 size-160 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 blur-3xl"
-      />
-
-      <div className="relative mx-auto flex max-w-3xl flex-col items-center px-4 pt-20 pb-0 text-center sm:px-6 lg:pt-28">
-        <h1 className="font-heading text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+    <section className="relative isolate bg-muted pt-10 pb-20 dark:bg-black">
+      <div className="relative container flex flex-col items-center pt-20 text-center lg:pt-28">
+        <h1 className="font-heading max-w-4xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
           Every tab&apos;s{" "}
           <span className="text-primary">volume, mic, and camera</span> — in
           your toolbar, not buried in site settings
         </h1>
 
-        <p className="mt-6 max-w-xl text-lg text-pretty text-muted-foreground">
+        <p className="mt-6 max-w-2xl text-lg text-pretty text-muted-foreground">
           Mute one tab — not the whole site — without closing it. Boost quiet
           dialogue past 100% so it&apos;s actually audible on laptop speakers.
           Kill your mic or webcam from the toolbar — no hunting for the
@@ -56,9 +51,7 @@ function HeroSection() {
         </p>
       </div>
 
-      <div className="relative mx-auto mt-16 max-w-6xl px-4 pb-10 sm:px-6">
-        <BrowserMockup className="mx-auto" />
-      </div>
+      <BrowserMockup className="mx-auto mt-12 max-w-4xl" />
     </section>
   )
 }

@@ -19,9 +19,9 @@ function WhyMicSection() {
 
         <p>
           Audio Tuner puts a{" "}
-          <strong className="text-foreground">per-tab mic switch</strong> in your
-          toolbar. Flip it off and that tab can&apos;t hear you, regardless of
-          what the site thinks. The mic stays blocked for that tab until you
+          <strong className="text-foreground">per-tab mic switch</strong> in
+          your toolbar. Flip it off and that tab can&apos;t hear you, regardless
+          of what the site thinks. The mic stays blocked for that tab until you
           turn it back on.
         </p>
 

@@ -2,9 +2,7 @@ import Link from "next/link"
 import {
   IconAdjustments,
   IconAdjustmentsHorizontal,
-  IconBrandGithubFilled,
   IconCircleCheck,
-  IconDownload,
   IconHeart,
   IconMicrophone,
   IconShieldLock,
@@ -15,13 +13,11 @@ import {
 } from "@tabler/icons-react"
 import type { ComponentType } from "react"
 
+import { CtaSection, HeroSection } from "@/components/sections"
 import { pathsConfig } from "@/configs/path-config"
-import { siteConfig } from "@/configs/site-config"
-import { buttonVariants } from "@workspace/ui/components/button"
-import { Card } from "@workspace/ui/components/card"
-import { cn } from "@workspace/ui/lib/utils"
+import { IconCard } from "@workspace/ui/components/icon-card"
 
-import { AudioWave, SectionHeading } from "@/views/home/components"
+import { SectionHeading } from "@/views/home/components"
 
 type CoreFeature = {
   icon: ComponentType<{ className?: string }>
@@ -94,8 +90,7 @@ const details: Detail[] = [
   {
     icon: IconCircleCheck,
     title: "One-click reset",
-    description:
-      "Reset any tab back to its default level in a single click.",
+    description: "Reset any tab back to its default level in a single click.",
   },
   {
     icon: IconShieldLock,
@@ -114,51 +109,13 @@ const details: Detail[] = [
 function FeaturesView() {
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-neutral-950 text-white">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-32 -top-40 size-[34rem] rounded-full bg-primary/20 blur-3xl"
-        />
-        <div className="relative mx-auto max-w-4xl px-4 py-20 sm:px-6 lg:py-28">
-          <div className="flex flex-col items-center gap-6 text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/80">
-              <IconAdjustmentsHorizontal className="size-3.5 text-primary" />
-              Features
-            </span>
-            <h1 className="font-heading text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-              Everything Audio Tuner controls
-            </h1>
-            <p className="max-w-2xl text-pretty text-lg text-white/70 sm:text-xl">
-              A per-tab media controller for your browser — volume, mic, and
-              webcam, all from one toolbar popup.
-            </p>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link
-                href={siteConfig.links.cta}
-                className={cn(
-                  buttonVariants({ size: "lg" }),
-                  "bg-primary text-primary-foreground hover:bg-primary/90",
-                )}
-              >
-                <IconDownload className="size-4" />
-                Add to Chrome — free
-              </Link>
-              <Link
-                href={pathsConfig.faq}
-                className={cn(
-                  buttonVariants({ variant: "outline", size: "lg" }),
-                  "border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white",
-                )}
-              >
-                Read the FAQ
-              </Link>
-            </div>
-            <div className="mt-4 w-full max-w-md text-primary/70">
-              <AudioWave bars={48} />
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSection
+        badgeIcon={IconAdjustmentsHorizontal}
+        badgeText="Features"
+        title="Everything Audio Tuner controls"
+        description="A per-tab media controller for your browser — volume, mic, and webcam, all from one toolbar popup."
+        secondaryCta={{ href: pathsConfig.faq, label: "Read the FAQ" }}
+      />
 
       <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
         <SectionHeading
@@ -168,23 +125,19 @@ function FeaturesView() {
         />
         <div className="mt-14 grid gap-6 sm:grid-cols-2">
           {coreFeatures.map((feature) => (
-            <Card key={feature.title} className="gap-4 p-6">
-              <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <feature.icon className="size-6" />
-              </span>
-              <h3 className="font-heading text-lg font-semibold tracking-tight">
-                {feature.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {feature.description}
-              </p>
+            <IconCard
+              key={feature.title}
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+            >
               <Link
                 href={feature.href}
                 className="text-sm font-medium text-primary underline-offset-4 hover:underline"
               >
                 {feature.linkLabel}
               </Link>
-            </Card>
+            </IconCard>
           ))}
         </div>
       </section>
@@ -198,64 +151,18 @@ function FeaturesView() {
           />
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {details.map((detail) => (
-              <Card key={detail.title} className="gap-4 p-6">
-                <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <detail.icon className="size-6" />
-                </span>
-                <h3 className="font-heading text-lg font-semibold tracking-tight">
-                  {detail.title}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {detail.description}
-                </p>
-              </Card>
+              <IconCard
+                key={detail.title}
+                icon={detail.icon}
+                title={detail.title}
+                description={detail.description}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      <section className="relative isolate overflow-hidden border-t border-border/60 bg-neutral-950 text-white">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-1/2 size-[40rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/20 blur-3xl"
-        />
-        <div className="relative mx-auto max-w-3xl px-4 py-24 text-center sm:px-6">
-          <AudioWave
-            className="mx-auto mb-8 h-10 w-48 text-primary/70"
-            bars={40}
-          />
-          <h2 className="font-heading text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-            Try it on your noisiest tab
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-pretty text-white/70">
-            Install Audio Tuner and get volume, mic, and webcam controls on
-            every tab — without digging through settings. Free, private, ready
-            in seconds.
-          </p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link
-              href={siteConfig.links.cta}
-              className={cn(
-                buttonVariants({ size: "lg" }),
-                "bg-primary text-primary-foreground hover:bg-primary/90",
-              )}
-            >
-              <IconDownload className="size-4" />
-              Add to Chrome
-            </Link>
-            <Link
-              href={siteConfig.links.github}
-              className={cn(
-                buttonVariants({ variant: "outline", size: "lg" }),
-                "border-white/20 bg-transparent text-white hover:bg-white/10 hover:text-white",
-              )}
-            >
-              <IconBrandGithubFilled className="size-4" />
-              View on GitHub
-            </Link>
-          </div>
-        </div>
-      </section>
+      <CtaSection />
     </>
   )
 }

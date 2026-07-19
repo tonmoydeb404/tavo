@@ -1,47 +1,27 @@
+import { IconVideoOff } from "@tabler/icons-react"
+
+import { CtaSection, HeroSection } from "@/components/sections"
 import {
   FaqSection,
-  FinalCtaSection,
   HowItWorksSection,
-  IntroSection,
   UseCasesSection,
   WhyWebcamSection,
 } from "./sections"
 
-import { JsonLd, breadcrumbSchema, faqPageSchema, webApplicationSchema } from "@/seo"
-import { faqs } from "./sections/faq-section"
-import { pathsConfig } from "@/configs/path-config"
-import { siteConfig } from "@/configs/site-config"
-
 function WebcamToggleView() {
-  const base = siteConfig.brand.url
-  const url = `${base}${pathsConfig.webcamToggle}`
-
-  const schemas = [
-    webApplicationSchema({
-      name: "Audio Tuner — Webcam Toggle",
-      url,
-      description:
-        "Per-tab webcam toggle for Chrome, Edge, and Brave. Turn off any tab's camera from the toolbar, without hunting for each site's camera button.",
-    }),
-    faqPageSchema(faqs),
-    breadcrumbSchema([
-      { name: "Home", url: base },
-      { name: "Webcam Toggle", url },
-    ]),
-  ]
-
   return (
     <>
-      {schemas.map((schema) => (
-        <JsonLd key={schema["@type"]} schema={schema} />
-      ))}
-
-      <IntroSection />
+      <HeroSection
+        badgeIcon={IconVideoOff}
+        badgeText="Webcam toggle for Chrome"
+        title="Turn off any tab's camera"
+        description="Flip the webcam off from the toolbar — no clicking through a site to find its camera button. Per tab, one click, on any site."
+      />
       <WhyWebcamSection />
       <UseCasesSection />
       <HowItWorksSection />
       <FaqSection />
-      <FinalCtaSection />
+      <CtaSection />
     </>
   )
 }

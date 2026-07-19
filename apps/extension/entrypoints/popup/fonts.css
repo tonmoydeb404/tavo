@@ -1,0 +1,13 @@
+/*
+ * Self-hosted copies of the Google Fonts used by apps/web (see
+ * apps/web/src/app/layout.tsx). The web app loads these via next/font/google,
+ * which isn't available outside Next.js, so the extension popup instead
+ * bundles the same font files locally via @fontsource. Self-hosting also
+ * avoids any network requests to fonts.googleapis.com from the popup.
+ */
+@import "@fontsource/amaranth/latin-400.css";
+@import "@fontsource/amaranth/latin-700.css";
+
+html {
+  --font-sans: "Amaranth", "Amaranth Fallback";
+}

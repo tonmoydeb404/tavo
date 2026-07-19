@@ -1,6 +1,8 @@
 import { IconDownload, IconPin, IconVideoOff } from "@tabler/icons-react"
 import type { ComponentType } from "react"
 
+import { IconCard } from "@workspace/ui/components/icon-card"
+
 import { SectionHeading } from "@/views/home/components"
 
 type Step = {
@@ -41,23 +43,13 @@ function HowItWorksSection() {
 
       <div className="relative mt-14 grid gap-6 md:grid-cols-3">
         {steps.map((step, index) => (
-          <div
+          <IconCard
             key={step.title}
-            className="relative flex flex-col gap-4 rounded-2xl border border-border/60 bg-card p-6"
-          >
-            <div className="flex items-center justify-between">
-              <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <step.icon className="size-6" />
-              </span>
-              <span className="font-heading text-5xl font-bold text-primary/15">
-                {index + 1}
-              </span>
-            </div>
-            <h3 className="font-heading text-lg font-semibold tracking-tight">
-              {step.title}
-            </h3>
-            <p className="text-sm text-muted-foreground">{step.description}</p>
-          </div>
+            icon={step.icon}
+            title={step.title}
+            description={step.description}
+            number={index + 1}
+          />
         ))}
       </div>
     </section>

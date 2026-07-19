@@ -1,48 +1,35 @@
+import { IconVolume } from "@tabler/icons-react"
+
+import { CtaSection, HeroSection } from "@/components/sections"
 import {
   FaqSection,
-  FinalCtaSection,
   HowItWorksSection,
-  IntroSection,
   UseCasesSection,
   WhyBoosterSection,
 } from "./sections"
 
-import { JsonLd, breadcrumbSchema, faqPageSchema, webApplicationSchema } from "@/seo"
-import { faqs } from "./sections/faq-section"
-import { pathsConfig } from "@/configs/path-config"
-import { siteConfig } from "@/configs/site-config"
-
 function VolumeBoosterView() {
-  const base = siteConfig.brand.url
-  const url = `${base}${pathsConfig.volumeBooster}`
-
-  const schemas = [
-    webApplicationSchema({
-      name: "Audio Tuner — Volume Booster",
-      url,
-      description:
-        "Free per-tab volume booster for Chrome, Edge, and Brave. Boost any tab up to 400% using the Web Audio API.",
-      screenshot: `${base}/opengraph-image`,
-    }),
-    faqPageSchema(faqs),
-    breadcrumbSchema([
-      { name: "Home", url: base },
-      { name: "Volume Booster", url },
-    ]),
-  ]
-
   return (
     <>
-      {schemas.map((schema) => (
-        <JsonLd key={schema["@type"]} schema={schema} />
-      ))}
-
-      <IntroSection />
+      <HeroSection
+        badgeIcon={IconVolume}
+        badgeText="Volume booster for Chrome"
+        title="Volume Booster for Chrome"
+        description={
+          <>
+            Make any tab up to{" "}
+            <strong className="font-semibold text-primary">400% louder</strong>{" "}
+            — quiet YouTube videos, inaudible podcasts, and muffled video calls
+            become easy to hear. Audio Tuner uses the Web Audio API to push any
+            tab past your system&apos;s 100% ceiling.
+          </>
+        }
+      />
       <WhyBoosterSection />
       <UseCasesSection />
       <HowItWorksSection />
       <FaqSection />
-      <FinalCtaSection />
+      <CtaSection />
     </>
   )
 }

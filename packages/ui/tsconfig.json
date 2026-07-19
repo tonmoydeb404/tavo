@@ -3,7 +3,8 @@
   "compilerOptions": {
     "paths": {
       "@workspace/ui/*": ["./src/*"]
-    }
+    },
+    "moduleResolution": "nodenext"
   },
   "include": ["."],
   "exclude": ["node_modules", "dist"]

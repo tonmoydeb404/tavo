@@ -8,7 +8,7 @@ import {
 } from "@tabler/icons-react"
 import type { ComponentType } from "react"
 
-import { Card } from "@workspace/ui/components/card"
+import { IconCard } from "@workspace/ui/components/icon-card"
 
 import { SectionHeading } from "@/views/home/components"
 
@@ -69,17 +69,12 @@ function UseCasesSection() {
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {useCases.map((useCase) => (
-            <Card key={useCase.title} className="gap-4 p-6">
-              <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <useCase.icon className="size-6" />
-              </span>
-              <h3 className="font-heading text-lg font-semibold tracking-tight">
-                {useCase.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {useCase.description}
-              </p>
-            </Card>
+            <IconCard
+              key={useCase.title}
+              icon={useCase.icon}
+              title={useCase.title}
+              description={useCase.description}
+            />
           ))}
         </div>
       </div>

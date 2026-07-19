@@ -1,99 +1,154 @@
-import { IconWaveSquare } from "@tabler/icons-react"
-import { pathsConfig } from "@/configs/path-config"
-import { siteConfig } from "@/configs/site-config"
+import { IconBrandGithubFilled } from "@tabler/icons-react"
+import Image from "next/image"
 import Link from "next/link"
 
-export const LayoutFooter = () => {
-  return (
-    <footer className="border-t border-border/60 py-10">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-4 text-center sm:px-6">
-        <Link href={pathsConfig.home} className="flex items-center gap-2">
-          <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <IconWaveSquare className="size-4" />
-          </span>
-          <span className="font-bold tracking-tight">
-            {siteConfig.brand.name}
-          </span>
-        </Link>
+import { assets } from "@/assets"
+import { pathsConfig } from "@/configs/path-config"
+import { siteConfig } from "@/configs/site-config"
+import { buttonVariants } from "@workspace/ui/components/button"
+import { cn } from "@workspace/ui/lib/utils"
 
-        <nav className="grid grid-cols-2 gap-x-10 gap-y-2 text-sm text-muted-foreground sm:grid-cols-3 md:flex md:flex-wrap md:items-center md:justify-center md:gap-x-6 md:gap-y-2">
+function browserRequestMailto(browser: string): string {
+  const subject = encodeURIComponent(`Tavo — ${browser} support request`)
+  const body = encodeURIComponent(
+    `Hi, I'd love to use Tavo on ${browser}. Please let me know when it's available.`
+  )
+  return `mailto:${siteConfig.links.email}?subject=${subject}&body=${body}`
+}
+
+const footerNav = [
+  {
+    title: "Features",
+    links: [
+      { href: pathsConfig.volumeBooster, label: "Volume Booster" },
+      { href: pathsConfig.muteTab, label: "Mute Tab" },
+      { href: pathsConfig.micToggle, label: "Mic Toggle" },
+      { href: pathsConfig.webcamToggle, label: "Webcam Toggle" },
+      { href: pathsConfig.mediaController, label: "Media Controller" },
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      { href: pathsConfig.features, label: "Features" },
+      { href: pathsConfig.faq, label: "FAQ" },
+      { href: pathsConfig.help, label: "Help" },
+      { href: pathsConfig.changelog, label: "Changelog" },
+      { href: pathsConfig.about, label: "About" },
+    ],
+  },
+  {
+    title: "Browser",
+    links: [
+      { href: siteConfig.links.chromeStore, label: "Chrome" },
+      { href: browserRequestMailto("Firefox"), label: "Firefox" },
+      { href: browserRequestMailto("Edge"), label: "Edge" },
+      { href: browserRequestMailto("Brave"), label: "Brave" },
+    ],
+  },
+  {
+    title: "Legals",
+    links: [
+      { href: pathsConfig.privacy, label: "Privacy" },
+      { href: pathsConfig.terms, label: "Terms" },
+    ],
+  },
+]
+
+export const LayoutFooter = () => {
+  const year = new Date().getFullYear()
+
+  return (
+    <footer className="relative overflow-hidden border-t border-border/60 bg-background">
+      <div className="container pt-14">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          <div className="max-w-md">
+            <Link href={pathsConfig.home} className="flex items-center gap-2.5">
+              <Image src={assets.logo} alt={siteConfig.brand.name} width={32} />
+              <span className="font-heading text-xl font-bold tracking-tight">
+                {siteConfig.brand.name}
+              </span>
+            </Link>
+            <p className="mt-4 text-sm text-pretty text-muted-foreground">
+              {siteConfig.brand.tagline}. Free and privacy-first — built for
+              Chrome, Edge, and Brave.
+            </p>
+          </div>
+
           <Link
-            href={pathsConfig.volumeBooster}
-            className="transition-colors hover:text-foreground"
+            href={siteConfig.links.github}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "sm" }),
+              "w-fit shrink-0 rounded-full"
+            )}
           >
-            Volume Booster
+            <IconBrandGithubFilled className="size-4" />
+            Star on GitHub
           </Link>
-          <Link
-            href={pathsConfig.muteTab}
-            className="transition-colors hover:text-foreground"
-          >
-            Mute Tab
-          </Link>
-          <Link
-            href={pathsConfig.micToggle}
-            className="transition-colors hover:text-foreground"
-          >
-            Mic Toggle
-          </Link>
-          <Link
-            href={pathsConfig.webcamToggle}
-            className="transition-colors hover:text-foreground"
-          >
-            Webcam Toggle
-          </Link>
-          <Link
-            href={pathsConfig.mediaController}
-            className="transition-colors hover:text-foreground"
-          >
-            Media Controller
-          </Link>
-          <Link
-            href={pathsConfig.features}
-            className="transition-colors hover:text-foreground"
-          >
-            Features
-          </Link>
-          <Link
-            href={pathsConfig.faq}
-            className="transition-colors hover:text-foreground"
-          >
-            FAQ
-          </Link>
-          <Link
-            href={pathsConfig.help}
-            className="transition-colors hover:text-foreground"
-          >
-            Help
-          </Link>
-          <Link
-            href={pathsConfig.changelog}
-            className="transition-colors hover:text-foreground"
-          >
-            Changelog
-          </Link>
-          <Link
-            href={pathsConfig.about}
-            className="transition-colors hover:text-foreground"
-          >
-            About
-          </Link>
-          <Link
-            href={pathsConfig.privacy}
-            className="transition-colors hover:text-foreground"
-          >
-            Privacy
-          </Link>
-          <Link
-            href={pathsConfig.terms}
-            className="transition-colors hover:text-foreground"
-          >
-            Terms
-          </Link>
+        </div>
+
+        <nav aria-label="Footer" className="mt-12">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-4 md:gap-x-10 lg:gap-x-12">
+            {footerNav.map((column) => (
+              <div key={column.title}>
+                <h3 className="flex items-center gap-2 font-heading text-xs tracking-wider text-foreground/80 uppercase">
+                  <span
+                    aria-hidden="true"
+                    className="size-1.5 rounded-full bg-primary"
+                  />
+                  {column.title}
+                </h3>
+                <ul className="mt-4 flex flex-col gap-2.5 text-sm">
+                  {column.links.map((link) => (
+                    <li key={link.href}>
+                      <Link
+                        href={link.href}
+                        className="text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </nav>
 
-        <p className="text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} {siteConfig.brand.name}. All rights
-          reserved.
+        <div
+          aria-hidden="true"
+          className="mt-14 flex h-10 items-end gap-0.75 text-primary/80"
+        >
+          {Array.from({ length: 64 }).map((_, i) => {
+            const delay = (i * 137) % 900
+            const duration = 800 + ((i * 53) % 700)
+            return (
+              <span
+                key={i}
+                className="eq-bar h-full flex-1 rounded-full bg-current"
+                style={{
+                  animationDelay: `${delay}ms`,
+                  animationDuration: `${duration}ms`,
+                }}
+              />
+            )
+          })}
+        </div>
+      </div>
+
+      <div className="container flex flex-col items-center justify-between gap-2 border-t border-border/60 py-5 text-xs text-muted-foreground sm:flex-row">
+        <p>
+          &copy; {year} {siteConfig.brand.name}. All rights reserved.
+        </p>
+
+        <p>
+          Open source · Built by{" "}
+          <Link
+            href={siteConfig.developer.portfolio}
+            className="font-medium text-foreground transition-colors hover:text-primary"
+          >
+            {siteConfig.developer.name}
+          </Link>
         </p>
       </div>
     </footer>

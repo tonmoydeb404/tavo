@@ -1,3 +1,8 @@
+import { IconScale } from "@tabler/icons-react"
+import Link from "next/link"
+
+import { HeroSection } from "@/components/sections"
+import { pathsConfig } from "@/configs/path-config"
 import { siteConfig } from "@/configs/site-config"
 
 type Section = {
@@ -52,7 +57,7 @@ const sections: Section[] = [
   {
     heading: "Limitation of liability",
     body: [
-      "To the fullest extent permitted by law, we aren't liable for damages arising from your use of Audio Tuner. The extension is free, and you use it at your own discretion.",
+      "To the fullest extent permitted by law, I am not liable for damages arising from your use of Audio Tuner. The extension is free, and you use it at your own discretion.",
     ],
   },
   {
@@ -64,60 +69,80 @@ const sections: Section[] = [
   {
     heading: "Changes to these Terms",
     body: [
-      "We may update these Terms. Continued use after changes are posted here counts as acceptance of the updated Terms.",
+      "I may update these Terms. Continued use after changes are posted here counts as acceptance of the updated Terms.",
     ],
   },
 ]
 
 export const TermsView = () => {
   return (
-    <main className="container py-20">
-      <div className="flex flex-col gap-8">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold tracking-tight">
-            Terms of Service
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Last updated: {lastUpdated}
-          </p>
+    <>
+      <HeroSection
+        badgeIcon={IconScale}
+        badgeText="Terms"
+        title="Terms of Service"
+        description="The terms for using Audio Tuner. The short version: it's free, open source, and provided 'as is' — and your mic and camera stay yours."
+      >
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+          <span>Last updated: {lastUpdated}</span>
+          <span aria-hidden="true">·</span>
+          <Link
+            href={pathsConfig.privacy}
+            className="underline underline-offset-4 hover:text-foreground"
+          >
+            Privacy Policy
+          </Link>
+          <span aria-hidden="true">·</span>
+          <a
+            href={`mailto:${siteConfig.links.email}`}
+            className="underline underline-offset-4 hover:text-foreground"
+          >
+            Contact
+          </a>
         </div>
+      </HeroSection>
+      <main className="container py-20">
+        <div className="flex flex-col gap-8">
+          {sections.map((section) => (
+            <section key={section.heading} className="flex flex-col gap-3">
+              <h2 className="text-xl font-semibold tracking-tight">
+                {section.heading}
+              </h2>
+              {section.body?.map((paragraph, index) => (
+                <p
+                  key={index}
+                  className="leading-relaxed text-muted-foreground"
+                >
+                  {paragraph}
+                </p>
+              ))}
+              {section.bullets ? (
+                <ul className="flex list-disc flex-col gap-2 pl-5 text-muted-foreground">
+                  {section.bullets.map((bullet, index) => (
+                    <li key={index} className="leading-relaxed">
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </section>
+          ))}
 
-        {sections.map((section) => (
-          <section key={section.heading} className="flex flex-col gap-3">
-            <h2 className="text-xl font-semibold tracking-tight">
-              {section.heading}
-            </h2>
-            {section.body?.map((paragraph, index) => (
-              <p key={index} className="leading-relaxed text-muted-foreground">
-                {paragraph}
-              </p>
-            ))}
-            {section.bullets ? (
-              <ul className="flex list-disc flex-col gap-2 pl-5 text-muted-foreground">
-                {section.bullets.map((bullet, index) => (
-                  <li key={index} className="leading-relaxed">
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+          <section className="flex flex-col gap-2">
+            <h2 className="text-xl font-semibold tracking-tight">Contact</h2>
+            <p className="leading-relaxed text-muted-foreground">
+              If you have questions about these Terms of Service, contact me at{" "}
+              <a
+                href={`mailto:${siteConfig.links.email}`}
+                className="text-foreground underline underline-offset-4"
+              >
+                {siteConfig.links.email}
+              </a>
+              .
+            </p>
           </section>
-        ))}
-
-        <section className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">Contact</h2>
-          <p className="leading-relaxed text-muted-foreground">
-            If you have questions about these Terms of Service, contact us at{" "}
-            <a
-              href={`mailto:${siteConfig.links.email}`}
-              className="text-foreground underline underline-offset-4"
-            >
-              {siteConfig.links.email}
-            </a>
-            .
-          </p>
-        </section>
-      </div>
-    </main>
+        </div>
+      </main>
+    </>
   )
 }

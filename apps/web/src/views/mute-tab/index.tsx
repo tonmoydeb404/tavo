@@ -1,47 +1,27 @@
+import { IconVolumeOff } from "@tabler/icons-react"
+
+import { CtaSection, HeroSection } from "@/components/sections"
 import {
   FaqSection,
-  FinalCtaSection,
   HowItWorksSection,
-  IntroSection,
   UseCasesSection,
   WhyMuteSection,
 } from "./sections"
 
-import { pathsConfig } from "@/configs/path-config"
-import { siteConfig } from "@/configs/site-config"
-import { JsonLd, breadcrumbSchema, faqPageSchema, webApplicationSchema } from "@/seo"
-import { faqs } from "./sections/faq-section"
-
 function MuteTabView() {
-  const base = siteConfig.brand.url
-  const url = `${base}${pathsConfig.muteTab}`
-
-  const schemas = [
-    webApplicationSchema({
-      name: "Audio Tuner — Tab Muter",
-      url,
-      description:
-        "Per-tab mute control for Chrome, Edge, and Brave. Silence any tab instantly without pausing playback.",
-    }),
-    faqPageSchema(faqs),
-    breadcrumbSchema([
-      { name: "Home", url: base },
-      { name: "Mute Tab", url },
-    ]),
-  ]
-
   return (
     <>
-      {schemas.map((schema) => (
-        <JsonLd key={schema["@type"]} schema={schema} />
-      ))}
-
-      <IntroSection />
+      <HeroSection
+        badgeIcon={IconVolumeOff}
+        badgeText="Per-tab mute for Chrome"
+        title="Mute Any Tab in Chrome"
+        description="Silence the tab — not your whole browser. Mute autoplay ads, background YouTube, and chatty tabs in one click while your music keeps playing. Audio Tuner gives every browser tab its own mute button."
+      />
       <WhyMuteSection />
       <UseCasesSection />
       <HowItWorksSection />
       <FaqSection />
-      <FinalCtaSection />
+      <CtaSection />
     </>
   )
 }

@@ -1,6 +1,4 @@
-export * from "./final-cta-section"
 export * from "./faq-section"
 export * from "./how-it-works-section"
-export * from "./intro-section"
 export * from "./use-cases-section"
 export * from "./why-webcam-section"

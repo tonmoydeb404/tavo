@@ -1,10 +1,12 @@
+"use client"
+
 import { useCallback, useState } from "react"
 
 import {
+  IconBrowser,
   IconLoader,
   IconMicrophone,
   IconMicrophoneOff,
-  IconRefresh,
   IconRestore,
   IconVideo,
   IconVideoOff,
@@ -16,18 +18,38 @@ import { Button } from "@workspace/ui/components/button"
 import { Card, CardContent } from "@workspace/ui/components/card"
 import { Separator } from "@workspace/ui/components/separator"
 import { Slider } from "@workspace/ui/components/slider"
+import { TooltipButton } from "@workspace/ui/custom/tooltip-button"
+import { useToolbarKeyboardNav } from "@workspace/ui/hooks/use-toolbar-keyboard-nav"
 import { cn } from "@workspace/ui/lib/utils"
 
-import { MAX_VOLUME, type MediaActivity, type TabState } from "@/lib/messaging"
+// Volume slider ceiling (percent). 100 = unity gain.
+const MIXER_ROW_MAX_VOLUME = 400
 
-import { TooltipButton } from "./tooltip-button"
-import { useToolbarKeyboardNav } from "./use-toolbar-keyboard-nav"
-import type { Tab } from "./use-tab-states"
+type MixerRowTab = {
+  id?: number
+  title?: string
+  url?: string
+  favIconUrl?: string
+  active?: boolean
+  audible?: boolean
+}
+
+type MixerRowState = {
+  volume: number // 0..MIXER_ROW_MAX_VOLUME (percent)
+  muted: boolean
+  micMuted: boolean
+  cameraOff: boolean
+}
+
+type MixerRowActivity = {
+  hasMic: boolean
+  hasCamera: boolean
+}
 
 type MixerRowProps = {
-  tab: Tab
-  state: TabState
-  activity: MediaActivity
+  tab: MixerRowTab
+  state: MixerRowState
+  activity: MixerRowActivity
   onVolumeChange: (tabId: number, volume: number) => void
   onMutedChange: (tabId: number, muted: boolean) => void
   onMicMutedChange: (tabId: number, micMuted: boolean) => void
@@ -36,8 +58,8 @@ type MixerRowProps = {
   onReloadTab: (tabId: number) => void
 }
 
-// Position of the 100% (unity) marker within a 0..MAX_VOLUME slider.
-const UNITY_PERCENT = (100 / MAX_VOLUME) * 100
+// Position of the 100% (unity) marker within a 0..MIXER_ROW_MAX_VOLUME slider.
+const UNITY_PERCENT = (100 / MIXER_ROW_MAX_VOLUME) * 100
 
 // Visual confirmation window after the user clicks reload. The actual
 // browser.tabs.reload() fires immediately; this just signals "done."
@@ -46,7 +68,7 @@ const RELOAD_FEEDBACK_MS = 1500
 // A single tab in the mixer. Vertical 3-row layout:
 //   1. Header — favicon, title, status badges (active / audible)
 //   2. Hero   — volume slider (0..400%) with a 100% unity marker + readout
-//   3. Toolbar— mute (primary) · mic / camera / reset · reload
+//   3. Toolbar— mute (primary) · mic / camera / reset / reload
 // The toolbar implements the WAI-ARIA toolbar pattern with arrow-key nav.
 function MixerRow({
   tab,
@@ -73,7 +95,7 @@ function MixerRow({
       const next = Array.isArray(value) ? (value[0] ?? 0) : value
       onVolumeChange(safeTabId, next)
     },
-    [onVolumeChange, safeTabId],
+    [onVolumeChange, safeTabId]
   )
 
   const handleMuted = useCallback(() => {
@@ -109,7 +131,7 @@ function MixerRow({
               alt=""
               width={16}
               height={16}
-              className="size-4 shrink-0 rounded-sm object-contain"
+              className="size-4 shrink-0 object-contain"
             />
           ) : (
             <span className="size-4 shrink-0 rounded-sm bg-muted" />
@@ -121,12 +143,7 @@ function MixerRow({
             {label}
           </span>
           {tab.active ? (
-            <Badge
-              variant="secondary"
-              className="h-5 px-1.5 text-[10px] font-medium"
-            >
-              Active
-            </Badge>
+            <Badge className="h-5 px-1.5 text-[10px] font-medium">Active</Badge>
           ) : null}
           {tab.audible ? (
             <Badge
@@ -147,15 +164,14 @@ function MixerRow({
           <div className="relative flex flex-1 items-center">
             <Slider
               min={0}
-              max={MAX_VOLUME}
+              max={MIXER_ROW_MAX_VOLUME}
               value={[state.volume]}
               onValueChange={handleVolume}
               aria-label={`Volume for ${label}`}
               aria-valuetext={`${state.volume} percent`}
               className={cn(
                 "flex-1",
-                state.volume > 100 &&
-                  "[&_[data-slot=slider-range]]:bg-amber-500",
+                state.volume > 100 && "**:data-[slot=slider-range]:bg-amber-500"
               )}
             />
             {/* Unity (100%) marker */}
@@ -169,7 +185,7 @@ function MixerRow({
             className={cn(
               "w-12 shrink-0 text-right text-xs tabular-nums",
               state.volume > 100 && "font-semibold text-amber-600",
-              state.volume === 0 && "text-muted-foreground",
+              state.volume === 0 && "text-muted-foreground"
             )}
           >
             {state.volume}%
@@ -185,7 +201,7 @@ function MixerRow({
           className="flex items-center gap-1"
         >
           <Button
-            variant={state.muted ? "destructive" : "secondary"}
+            variant={state.muted ? "destructive" : "outline"}
             size="sm"
             onClick={handleMuted}
             aria-label={state.muted ? "Unmute tab" : "Mute tab"}
@@ -218,9 +234,7 @@ function MixerRow({
             size="icon-sm"
             onClick={handleCamera}
             disabled={!activity.hasCamera}
-            aria-label={
-              state.cameraOff ? "Turn camera on" : "Turn camera off"
-            }
+            aria-label={state.cameraOff ? "Turn camera on" : "Turn camera off"}
             aria-pressed={state.cameraOff}
             tooltip={
               !activity.hasCamera
@@ -253,12 +267,12 @@ function MixerRow({
             onClick={handleReload}
             aria-label="Reload tab"
             disabled={reloading}
-            tooltip="Reload tab — use if volume, mic, or camera isn't taking effect"
+            tooltip="Reload tab - use if volume, mic, or camera isn't taking effect"
           >
             {reloading ? (
               <IconLoader className="animate-spin" />
             ) : (
-              <IconRefresh />
+              <IconBrowser />
             )}
           </TooltipButton>
         </div>
@@ -267,4 +281,5 @@ function MixerRow({
   )
 }
 
-export { MixerRow }
+export { MIXER_ROW_MAX_VOLUME, MixerRow }
+export type { MixerRowActivity, MixerRowProps, MixerRowState, MixerRowTab }

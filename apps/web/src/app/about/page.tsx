@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 
 import { pathsConfig } from "@/configs/path-config"
+import { siteConfig } from "@/configs/site-config"
+import { JsonLd, organizationSchema } from "@/seo"
 import { AboutView } from "@/views/about"
 
 const title = "About Audio Tuner"
@@ -22,5 +24,19 @@ export const metadata: Metadata = {
 }
 
 export default function Page() {
-  return <AboutView />
+  const base = siteConfig.brand.url
+
+  return (
+    <>
+      <JsonLd
+        schema={organizationSchema({
+          name: siteConfig.brand.name,
+          url: base,
+          email: siteConfig.links.email,
+          sameAs: [siteConfig.links.github],
+        })}
+      />
+      <AboutView />
+    </>
+  )
 }

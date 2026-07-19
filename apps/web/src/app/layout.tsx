@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { Amaranth, JetBrains_Mono, Noto_Serif } from "next/font/google"
+import { Amaranth, Noto_Sans } from "next/font/google"
 
 import { Providers } from "@/app/providers"
 import { siteConfig } from "@/configs/site-config"
@@ -30,20 +30,14 @@ export const metadata: Metadata = {
   },
 }
 
-const fontSans = Amaranth({
-  subsets: ["latin"],
-  variable: "--font-sans",
+const fontHeading = Amaranth({
+  variable: "--font-heading",
   weight: ["400", "700"],
 })
 
-const fontSerif = Noto_Serif({
+const fontSans = Noto_Sans({
   subsets: ["latin"],
-  variable: "--font-serif",
-})
-
-const fontMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-sans",
 })
 
 export default function RootLayout({
@@ -55,7 +49,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
+      className={`${fontHeading.variable} ${fontSans.variable} antialiased`}
     >
       <body suppressHydrationWarning>
         <Providers>

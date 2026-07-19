@@ -32,8 +32,8 @@ function WhyWebcamSection() {
         </p>
 
         <p>
-          The toggle works alongside your operating system&apos;s camera
-          privacy setting. If the OS camera is on, Audio Tuner decides{" "}
+          The toggle works alongside your operating system&apos;s camera privacy
+          setting. If the OS camera is on, Audio Tuner decides{" "}
           <strong className="text-foreground">which tabs</strong> get to use it.
         </p>
       </div>
