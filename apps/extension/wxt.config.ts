@@ -7,7 +7,6 @@ export default defineConfig({
   manifest: {
     name: brand.name,
     description: brand.description,
-    version_name: "1.0.0",
     minimum_chrome_version: "88",
     permissions: ["tabs", "storage"],
     host_permissions: ["<all_urls>"],

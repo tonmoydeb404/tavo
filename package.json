@@ -10,7 +10,8 @@
     "format": "turbo format",
     "typecheck": "turbo typecheck",
     "knip": "knip",
-    "knip:fix": "knip --fix"
+    "knip:fix": "knip --fix",
+    "release:tag": "node ./scripts/release-tag-sync.mjs"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
