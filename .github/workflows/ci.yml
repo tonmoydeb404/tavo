@@ -37,13 +37,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm turbo lint
+        run: pnpm --filter extension lint
 
       - name: Typecheck
-        run: pnpm turbo typecheck
+        run: pnpm --filter extension typecheck
 
       - name: Build
-        run: pnpm turbo build
+        run: pnpm --filter extension build
 
       - name: Package extension (Chrome)
         run: pnpm --filter extension zip
