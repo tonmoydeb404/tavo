@@ -27,7 +27,7 @@ pnpm --filter web lint           # eslint
 pnpm --filter web build          # next build
 pnpm --filter web format         # prettier --write
 pnpm --filter extension lint     # eslint (extension)
-pnpm --filter extension compile  # tsc --noEmit (extension)
+pnpm --filter extension typecheck  # tsc --noEmit (extension)
 ```
 
 Always run typecheck + lint + build after changes. There is no test suite.
