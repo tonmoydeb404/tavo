@@ -7,14 +7,14 @@
 
 import { z } from "zod"
 
-import { siteConfig } from "@/configs/site-config"
-
 const envSchema = z.object({
-  NEXT_PUBLIC_SITE_URL: z.url().optional().default(siteConfig.brand.url),
+  SITE_URL: z.url(),
+  CHROME_STORE_URL: z.url(),
 })
 
 const parsed = envSchema.safeParse({
-  NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+  SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+  CHROME_STORE_URL: process.env.NEXT_PUBLIC_CHROME_STORE_URL,
 })
 
 if (!parsed.success) {
@@ -23,9 +23,6 @@ if (!parsed.success) {
   )
 }
 
-export const envConfig = {
-  /** Public base URL of the site. Falls back to `siteConfig.brand.url` when unset. */
-  siteUrl: parsed.data.NEXT_PUBLIC_SITE_URL,
-} as const
+export const envConfig = { ...parsed.data } as const
 
 export type EnvConfig = typeof envConfig

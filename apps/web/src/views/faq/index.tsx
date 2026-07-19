@@ -1,4 +1,4 @@
-import { IconDownload, IconMessageQuestion } from "@tabler/icons-react"
+import { IconBrandChrome, IconMessageQuestion } from "@tabler/icons-react"
 import {
   Accordion,
   AccordionContent,
@@ -125,9 +125,9 @@ function FaqView() {
         title="Frequently asked questions"
         description="Everything you might want to know about Audio Tuner — volume, boost, mic, webcam, and privacy. Skip to a category below."
         primaryCta={{
-          href: siteConfig.links.cta,
+          href: siteConfig.links.chromeStore,
           label: "Add to Chrome — free",
-          icon: IconDownload,
+          icon: IconBrandChrome,
         }}
         secondaryCta={{
           href: pathsConfig.features,

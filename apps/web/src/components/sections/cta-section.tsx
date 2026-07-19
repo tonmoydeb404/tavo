@@ -1,4 +1,4 @@
-import { IconBrandGithubFilled, IconDownload } from "@tabler/icons-react"
+import { IconBrandChrome, IconBrandGithubFilled } from "@tabler/icons-react"
 import Link from "next/link"
 import type { ComponentType, ReactNode } from "react"
 
@@ -25,9 +25,9 @@ const defaultDescription =
   "Install Audio Tuner and get volume, mic, and webcam controls on every tab — without digging through settings. Free, private, ready in seconds."
 
 const defaultPrimaryCta: Cta = {
-  href: siteConfig.links.cta,
+  href: siteConfig.links.chromeStore,
   label: "Add to Chrome",
-  icon: IconDownload,
+  icon: IconBrandChrome,
 }
 
 const defaultSecondaryCta: Cta = {

@@ -1,7 +1,7 @@
 import {
   IconBolt,
+  IconBrandChrome,
   IconBrandGithubFilled,
-  IconDownload,
   IconHeart,
   IconInfoCircle,
   IconLock,
@@ -48,9 +48,9 @@ function AboutView() {
         title={`About ${siteConfig.brand.name}`}
         description={`${siteConfig.brand.name} is a free, privacy-first media controller for your browser. It gives every tab its own volume, microphone, and webcam controls — mute and boost up to 400%, flip your mic or camera off — the per-tab controls the browser forgot to ship.`}
         primaryCta={{
-          href: siteConfig.links.cta,
+          href: siteConfig.links.chromeStore,
           label: "Add to Chrome — free",
-          icon: IconDownload,
+          icon: IconBrandChrome,
         }}
         secondaryCta={{
           href: siteConfig.links.github,
@@ -159,10 +159,10 @@ function AboutView() {
                 Changelog
               </Link>
               <Link
-                href={siteConfig.links.cta}
+                href={siteConfig.links.chromeStore}
                 className={cn(buttonVariants())}
               >
-                <IconDownload className="size-4" />
+                <IconBrandChrome className="size-4" />
                 Add to Chrome
               </Link>
             </div>

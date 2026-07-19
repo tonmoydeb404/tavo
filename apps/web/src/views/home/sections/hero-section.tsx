@@ -1,6 +1,6 @@
 import {
+  IconBrandChrome,
   IconBrandGithubFilled,
-  IconDownload,
   IconSparkles,
 } from "@tabler/icons-react"
 import Link from "next/link"
@@ -30,10 +30,10 @@ function HeroSection() {
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Link
-            href={siteConfig.links.cta}
+            href={siteConfig.links.chromeStore}
             className={cn(buttonVariants({ size: "lg" }))}
           >
-            <IconDownload className="size-4" />
+            <IconBrandChrome className="size-4" />
             Add to Chrome
           </Link>
           <Link

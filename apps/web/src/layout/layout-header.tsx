@@ -56,7 +56,7 @@ export const LayoutHeader = () => {
 
         <div className="flex items-center gap-1">
           <Link
-            href={siteConfig.links.cta}
+            href={siteConfig.links.chromeStore}
             className={cn(
               buttonVariants({ size: "sm" }),
               "hidden rounded-full sm:inline-flex"
@@ -100,7 +100,7 @@ export const LayoutHeader = () => {
                 <DrawerClose
                   render={
                     <Link
-                      href={siteConfig.links.cta}
+                      href={siteConfig.links.chromeStore}
                       className={cn(
                         buttonVariants({ size: "sm" }),
                         "mt-2 w-full"

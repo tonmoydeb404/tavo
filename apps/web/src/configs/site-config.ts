@@ -1,12 +1,13 @@
+import { envConfig } from "./env-config"
+
 /**
  * Central site configuration.
  */
-
 export const siteConfig = {
   /** Brand identity */
   brand: {
     name: "Tavo",
-    url: "https://tavo.tonmoydeb.com",
+    url: envConfig.SITE_URL,
     /** Short tagline used in metadata */
     tagline: "Per-tab volume, mic, and webcam control",
   },
@@ -24,10 +25,9 @@ export const siteConfig = {
 
   /** Contact + social links — update with real URLs */
   links: {
-    cta: "#",
     github: "https://github.com/tonmoydeb404/tavo",
     email: "tonmoydeb404@gmail.com",
-    chromeStore: "#",
+    chromeStore: envConfig.CHROME_STORE_URL,
   },
 
   /** Developer credit */

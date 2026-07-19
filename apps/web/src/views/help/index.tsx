@@ -1,6 +1,7 @@
 import {
   IconAdjustments,
   IconAlertCircle,
+  IconBrandChrome,
   IconDownload,
   IconLifebuoy,
   IconMicrophone,
@@ -26,7 +27,7 @@ type Step = {
 
 const setupSteps: Step[] = [
   {
-    icon: IconDownload,
+    icon: IconBrandChrome,
     title: "1. Install from the Chrome Web Store",
     body: "Open the listing on the Chrome Web Store and click Add to Chrome. The same listing installs cleanly on Edge and Brave. Audio Tuner does not request any sensitive permissions.",
   },
