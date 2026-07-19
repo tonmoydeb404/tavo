@@ -74,9 +74,9 @@ export default async function OgImage() {
             textAlign: "center",
           }}
         >
-          Ship your next
+          Every tab&apos;s volume,
           <br />
-          browser extension
+          mic &amp; camera
         </div>
         <div style={{ fontSize: 28, color: "#666", marginTop: 24 }}>
           {siteConfig.brand.tagline}

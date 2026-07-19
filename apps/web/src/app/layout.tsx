@@ -1,11 +1,10 @@
 import type { Metadata } from "next"
-import { DM_Sans } from "next/font/google"
+import { Amaranth, JetBrains_Mono, Noto_Serif } from "next/font/google"
 
 import { Providers } from "@/app/providers"
 import { siteConfig } from "@/configs/site-config"
 import { LayoutFooter, LayoutHeader } from "@/layout"
 import "@workspace/ui/globals.css"
-import { cn } from "@workspace/ui/lib/utils"
 
 export const metadata: Metadata = {
   title: {
@@ -31,7 +30,21 @@ export const metadata: Metadata = {
   },
 }
 
-const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" })
+const fontSans = Amaranth({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "700"],
+})
+
+const fontSerif = Noto_Serif({
+  subsets: ["latin"],
+  variable: "--font-serif",
+})
+
+const fontMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+})
 
 export default function RootLayout({
   children,
@@ -42,7 +55,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn("antialiased", "font-sans", dmSans.variable)}
+      className={`${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
     >
       <body suppressHydrationWarning>
         <Providers>

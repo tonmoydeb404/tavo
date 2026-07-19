@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1200" width="1600" height="1200" role="img" aria-label="Audio Tuner — per-tab browser audio mixer">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a0709" />
+      <stop offset="0.55" stop-color="#0d0608" />
+      <stop offset="1" stop-color="#070708" />
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="36%" r="60%">
+      <stop offset="0" stop-color="#dc2626" stop-opacity="0.5" />
+      <stop offset="0.45" stop-color="#dc2626" stop-opacity="0.14" />
+      <stop offset="1" stop-color="#dc2626" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="wave" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fca5a5" />
+      <stop offset="1" stop-color="#b91c1c" />
+    </linearGradient>
+    <linearGradient id="wave2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dc2626" stop-opacity="0.55" />
+      <stop offset="1" stop-color="#7f1d1d" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="1200" fill="url(#bg)" />
+  <rect width="1600" height="1200" fill="url(#glow)" />
+
+  <!-- concentric sound rings -->
+  <g fill="none" stroke="#dc2626" transform="translate(800 470)">
+    <circle r="330" stroke-width="2" opacity="0.10" />
+    <circle r="265" stroke-width="2" opacity="0.16" />
+    <circle r="200" stroke-width="2" opacity="0.26" />
+    <circle r="140" stroke-width="2" opacity="0.45" />
+    <circle r="84" fill="#0b0608" stroke-width="3" opacity="1" />
+  </g>
+
+  <!-- center waveform badge -->
+  <path
+    d="M715 470 q14 -52 28 0 t28 0 t28 0 t28 0"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="6"
+    stroke-linecap="round"
+  />
+  <circle cx="660" cy="470" r="6" fill="#ffffff" />
+  <circle cx="940" cy="470" r="6" fill="#ffffff" />
+
+  <!-- back equalizer wave -->
+  <path
+    d="M0 1080 C 160 1000 260 1180 420 1050 S 760 940 980 1060 S 1340 1180 1600 1020 L1600 1200 L0 1200 Z"
+    fill="url(#wave2)"
+    opacity="0.55"
+  />
+
+  <!-- front equalizer bars -->
+  <g fill="url(#wave)">
+    <rect x="80"   y="1140" width="22" height="40"  rx="8" />
+    <rect x="148"  y="1110" width="22" height="70"  rx="8" />
+    <rect x="216"  y="1125" width="22" height="55"  rx="8" />
+    <rect x="284"  y="1085" width="22" height="95"  rx="8" />
+    <rect x="352"  y="1100" width="22" height="80"  rx="8" />
+    <rect x="420"  y="1060" width="22" height="120" rx="8" />
+    <rect x="488"  y="1080" width="22" height="100" rx="8" />
+    <rect x="556"  y="1030" width="22" height="150" rx="8" />
+    <rect x="624"  y="1050" width="22" height="130" rx="8" />
+    <rect x="692"  y="1005" width="22" height="175" rx="8" />
+    <rect x="760"  y="1030" width="22" height="150" rx="8" />
+    <rect x="828"  y="980"  width="22" height="200" rx="8" />
+    <rect x="896"  y="1010" width="22" height="170" rx="8" />
+    <rect x="964"  y="970"  width="22" height="210" rx="8" />
+    <rect x="1032" y="1000" width="22" height="180" rx="8" />
+    <rect x="1100" y="985"  width="22" height="195" rx="8" />
+    <rect x="1168" y="1015" width="22" height="165" rx="8" />
+    <rect x="1236" y="975"  width="22" height="205" rx="8" />
+    <rect x="1304" y="1005" width="22" height="175" rx="8" />
+    <rect x="1372" y="990"  width="22" height="190" rx="8" />
+    <rect x="1440" y="1020" width="22" height="160" rx="8" />
+    <rect x="1508" y="1000" width="22" height="180" rx="8" />
+  </g>
+</svg>

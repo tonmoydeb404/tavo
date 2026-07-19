@@ -1,100 +1,136 @@
-import { LegalShell } from "@/components/legal-shell"
 import { siteConfig } from "@/configs/site-config"
+
+type Section = {
+  heading: string
+  body?: string[]
+  bullets?: string[]
+}
+
+const lastUpdated = "July 19, 2026"
+
+const sections: Section[] = [
+  {
+    heading: "The short version",
+    bullets: [
+      "No account, no email, no sign-up.",
+      "No analytics, telemetry, or tracking in the extension.",
+      "No servers — the extension has nowhere to send your data.",
+      "Microphone and camera toggles only switch a tab's access on or off. Audio Tuner never records, listens to, or transmits your mic or camera.",
+      "Per-tab settings live in session storage and are cleared when you close the browser.",
+    ],
+  },
+  {
+    heading: "What Audio Tuner is",
+    body: [
+      "Audio Tuner is a per-tab media controller. It adjusts volume, mutes tabs, and toggles your microphone and webcam for individual browser tabs. This policy explains what the extension and its website do with your information.",
+    ],
+  },
+  {
+    heading: "Information we collect",
+    body: [
+      "We don't collect personal information through the extension. We don't add accounts, analytics SDKs, or tracking pixels to it, and there is no backend for the extension to talk to.",
+      "This website doesn't require an account either. If we add basic, privacy-friendly analytics in the future, this page will say so and name the tool.",
+    ],
+  },
+  {
+    heading: "Microphone, camera, and audio",
+    body: [
+      "To control a tab's volume, Audio Tuner processes that tab's audio locally with the browser's Web Audio API. The audio stays inside your browser — it is never recorded or sent anywhere.",
+      "To toggle your microphone or webcam per tab, Audio Tuner controls whether that individual tab is allowed to reach those devices. It's an on/off switch for a tab's permission, nothing more. Audio Tuner itself never captures, records, stores, or transmits microphone audio or camera video.",
+      "When a mic or camera toggle is off, the tab can't reach that device. When it's on, the tab uses the device directly, exactly as it would without Audio Tuner installed.",
+    ],
+  },
+  {
+    heading: "Permissions the extension requests",
+    body: [
+      "Audio Tuner asks for the permissions it needs to work, and no others:",
+    ],
+    bullets: [
+      "Tab audio access — to show per-tab volume sliders and apply boost and mute.",
+      "Microphone and camera management — to turn each on or off per tab on your request.",
+      "Storage — to remember your per-tab settings for the current session.",
+    ],
+  },
+  {
+    heading: "Where settings are stored",
+    body: [
+      "Your per-tab volume, mute, mic, and camera settings are stored in the browser's session storage. They live only on your device and are cleared when you close the browser. Nothing about your settings is sent to us.",
+    ],
+  },
+  {
+    heading: "Cookies and the website",
+    body: [
+      "This website doesn't use tracking or advertising cookies. Standard web infrastructure may set essential cookies needed to serve the pages. We don't run third-party analytics or ad networks on the site.",
+    ],
+  },
+  {
+    heading: "Third-party services",
+    body: [
+      "The extension itself uses no third-party services. The website is hosted on a standard web host, which may keep basic server logs as part of keeping the site online. Installing Audio Tuner happens through your browser's extension store, which has its own terms and privacy practices.",
+    ],
+  },
+  {
+    heading: "Data retention",
+    body: [
+      "There's nothing to retain. The extension stores your settings only for the current session, and they're wiped when the browser closes. With no server, there's no long-term storage on our side.",
+    ],
+  },
+  {
+    heading: "Your rights",
+    body: [
+      "Because we don't collect or store personal information about you, there's no data of yours for us to access, export, or delete. You're always in control: closing the browser clears your session settings, and removing the extension clears everything. If you have a specific request, contact us and we'll help.",
+    ],
+  },
+  {
+    heading: "Children",
+    body: [
+      "Audio Tuner isn't directed at children, and we don't knowingly collect information from anyone under 16. The extension doesn't collect information from anyone at all.",
+    ],
+  },
+  {
+    heading: "Changes to this policy",
+    body: [
+      "If we change this policy, we'll post the updated version here with a new last-updated date.",
+    ],
+  },
+]
 
 export const PrivacyView = () => {
   return (
-    <LegalShell>
+    <main className="container py-20">
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-bold tracking-tight">Privacy Policy</h1>
           <p className="text-sm text-muted-foreground">
-            Last updated: {new Date().toLocaleDateString()}
+            Last updated: {lastUpdated}
           </p>
         </div>
 
-        <section className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">Introduction</h2>
-          <p className="text-muted-foreground">
-            This Privacy Policy describes how {siteConfig.brand.name}{" "}
-            (&quot;we&quot;, &quot;us&quot;, or &quot;our&quot;) collects, uses,
-            and protects information when you use our browser extension and
-            companion website. This is placeholder content and should be
-            replaced with your actual privacy practices.
-          </p>
-        </section>
-
-        <section className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">
-            Information We Collect
-          </h2>
-          <p className="text-muted-foreground">
-            Describe here what data your extension or website collects, such as
-            usage analytics, device information, or user preferences.
-          </p>
-        </section>
-
-        <section className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">
-            How We Use Information
-          </h2>
-          <p className="text-muted-foreground">
-            Explain how the collected information is used, e.g. to provide and
-            improve the service, respond to support requests, or ensure
-            security.
-          </p>
-        </section>
-
-        <section className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">
-            Cookies &amp; Tracking
-          </h2>
-          <p className="text-muted-foreground">
-            Describe any cookies, local storage, or similar tracking
-            technologies used by the website or extension.
-          </p>
-        </section>
-
-        <section className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">
-            Third-Party Services
-          </h2>
-          <p className="text-muted-foreground">
-            List any third-party services (analytics, hosting, error tracking)
-            that may process user data on your behalf.
-          </p>
-        </section>
-
-        <section className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">
-            Data Retention
-          </h2>
-          <p className="text-muted-foreground">
-            Explain how long data is retained and how users can request deletion
-            of their information.
-          </p>
-        </section>
-
-        <section className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">Your Rights</h2>
-          <p className="text-muted-foreground">
-            Describe user rights regarding their data, such as access,
-            correction, or deletion requests, depending on applicable law.
-          </p>
-        </section>
-
-        <section className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold tracking-tight">
-            Changes to This Policy
-          </h2>
-          <p className="text-muted-foreground">
-            We may update this Privacy Policy from time to time. Any changes
-            will be posted on this page with an updated revision date.
-          </p>
-        </section>
+        {sections.map((section) => (
+          <section key={section.heading} className="flex flex-col gap-3">
+            <h2 className="text-xl font-semibold tracking-tight">
+              {section.heading}
+            </h2>
+            {section.body?.map((paragraph, index) => (
+              <p key={index} className="leading-relaxed text-muted-foreground">
+                {paragraph}
+              </p>
+            ))}
+            {section.bullets ? (
+              <ul className="flex list-disc flex-col gap-2 pl-5 text-muted-foreground">
+                {section.bullets.map((bullet, index) => (
+                  <li key={index} className="leading-relaxed">
+                    {bullet}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </section>
+        ))}
 
         <section className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold tracking-tight">Contact</h2>
-          <p className="text-muted-foreground">
+          <p className="leading-relaxed text-muted-foreground">
             If you have questions about this Privacy Policy, contact us at{" "}
             <a
               href={`mailto:${siteConfig.links.email}`}
@@ -106,6 +142,6 @@ export const PrivacyView = () => {
           </p>
         </section>
       </div>
-    </LegalShell>
+    </main>
   )
 }
