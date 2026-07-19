@@ -7,8 +7,11 @@ export default defineConfig({
     name: "Audio Tuner",
     description:
       "Mute tabs and adjust per-tab volume (0-400%) for any playing audio or video.",
+    version_name: "1.0.0",
+    minimum_chrome_version: "88",
     permissions: ["tabs", "storage"],
     host_permissions: ["<all_urls>"],
+    homepage_url: "https://tavo.tonmoydeb.com",
     action: {
       default_title: "Audio Tuner",
     },

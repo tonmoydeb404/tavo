@@ -1,16 +1,21 @@
 {
   "name": "@workspace/extension",
-  "description": "Browser extension built with WXT and React.",
+  "description": "Mute tabs and adjust per-tab volume (0-400%) for any playing audio or video.",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "license": "MIT",
+  "author": "tonmoydeb404",
+  "homepage": "https://github.com/tonmoydeb404/tavo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tonmoydeb404/tavo.git",
+    "directory": "apps/extension"
+  },
   "scripts": {
     "dev": "wxt",
-    "dev:firefox": "wxt -b firefox",
     "build": "wxt build",
-    "build:firefox": "wxt build -b firefox",
     "zip": "wxt zip",
-    "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
     "lint": "eslint .",
     "postinstall": "wxt prepare"
