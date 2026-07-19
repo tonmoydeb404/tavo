@@ -24,86 +24,40 @@ type Release = {
 
 const releases: Release[] = [
   {
-    version: "1.1.0",
-    date: "2026-07-19",
-    changes: [
-      {
-        type: "added",
-        text: "Per-tab mic toggle — mute any tab's microphone from the toolbar.",
-      },
-      {
-        type: "added",
-        text: "Per-tab webcam toggle — turn any tab's camera off from the toolbar.",
-      },
-      {
-        type: "added",
-        text: "True per-tab mute that silences one tab, not every tab on the same site like Chrome does.",
-      },
-      {
-        type: "improved",
-        text: "Audio Tuner is now a full per-tab media controller — volume, mic, and webcam.",
-      },
-    ],
-  },
-  {
     version: "1.0.0",
-    date: "2026-01-15",
+    date: "2026-07-20",
     changes: [
       {
         type: "added",
-        text: "Initial public release of Audio Tuner — per-tab volume mixer for Chrome, Edge, and Brave.",
+        text: "Initial public release of Audio Tuner — a per-tab media controller for Chromium browsers (Chrome, Edge, Brave).",
       },
       {
         type: "added",
-        text: "Per-tab volume sliders from 0 to 400% using the Web Audio API.",
+        text: "Per-tab volume sliders from 0 to 400% using the Web Audio API, applied directly in each page's audio context.",
       },
       {
         type: "added",
-        text: "Native per-tab mute, including WebRTC streams (Meet, Zoom web, Teams web).",
+        text: "Native per-tab mute via chrome.tabs.update({ muted }) — silences one tab without affecting other tabs on the same site, including WebRTC streams (Meet, Zoom web, Teams web).",
       },
       {
         type: "added",
-        text: "Audible-only filter to focus on tabs currently making sound.",
+        text: "Per-tab microphone toggle to mute any tab's mic from the toolbar.",
       },
       {
         type: "added",
-        text: "Boosted tabs glow amber so you can find them later.",
+        text: "Per-tab webcam toggle to turn any tab's camera off from the toolbar.",
       },
       {
         type: "added",
-        text: "Session-only storage — no servers, no analytics, no account.",
+        text: "Audible-only filter so you can focus on tabs currently making sound.",
       },
-    ],
-  },
-  {
-    version: "0.9.0",
-    date: "2025-12-10",
-    changes: [
-      {
-        type: "improved",
-        text: "Mixer popup now opens 40% faster on window sessions with many tabs.",
-      },
-      {
-        type: "fixed",
-        text: "Sliders no longer reset when a tab navigates to a new URL on the same origin.",
-      },
-      {
-        type: "fixed",
-        text: "Mute icon now correctly reflects state on Google Meet tabs after a refresh.",
-      },
-    ],
-  },
-  {
-    version: "0.8.0",
-    date: "2025-11-02",
-    changes: [
       {
         type: "added",
-        text: "Firefox build published alongside the Chromium build.",
+        text: "Per-tab badge counter showing how many adjustments (volume, mute, mic, camera) are active on each tab, without opening the popup.",
       },
       {
-        type: "improved",
-        text: "Reduced extension bundle size by ~30% after switching to WXT.",
+        type: "added",
+        text: "Session-only storage via chrome.storage.session — no servers, no analytics, no account, no data leaving the browser.",
       },
     ],
   },
@@ -140,9 +94,9 @@ function ChangelogView() {
                 className="relative flex flex-col gap-4 border-l-2 border-border pl-6"
               >
                 {index === 0 ? (
-                  <span className="absolute top-1 -left-[5px] size-2 rounded-full bg-primary" />
+                  <span className="absolute top-1 -left-1.25 size-2 rounded-full bg-primary" />
                 ) : (
-                  <span className="absolute top-1 -left-[5px] size-2 rounded-full bg-border" />
+                  <span className="absolute top-1 -left-1.25 size-2 rounded-full bg-border" />
                 )}
 
                 <header className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
