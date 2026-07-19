@@ -54,5 +54,5 @@ jobs:
         with:
           name: extension-packages
           path: apps/extension/.output/chrome-mv3-*.zip
-          if-no-files-found: error
+          if-no-files-found: ignore
           retention-days: 14
