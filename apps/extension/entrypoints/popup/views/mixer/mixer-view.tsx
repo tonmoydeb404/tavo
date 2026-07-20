@@ -58,7 +58,7 @@ function MixerView() {
       {!loaded ? (
         <MixerSkeleton />
       ) : rows.length === 0 ? (
-        <EmptyState audibleOnly={!showAll} />
+        <EmptyState mediaOnly={!showAll} />
       ) : (
         <div className="flex flex-col gap-2">
           {rows.map(({ tab, state, activity }) => (
@@ -87,14 +87,16 @@ function MixerView() {
   )
 }
 
-function EmptyState({ audibleOnly }: { audibleOnly: boolean }) {
+function EmptyState({ mediaOnly }: { mediaOnly: boolean }) {
   return (
     <div className="flex flex-col items-center gap-2 py-10 text-center text-muted-foreground">
       <IconVolumeOff className="size-8 opacity-40" />
       <p className="text-sm">
-        {audibleOnly ? "No tabs playing audio." : "No tabs open."}
+        {mediaOnly
+          ? "No tabs with active audio, mic, or camera."
+          : "No tabs open."}
       </p>
-      {audibleOnly ? (
+      {mediaOnly ? (
         <p className="text-xs">
           Toggle &ldquo;All tabs&rdquo; to control any tab.
         </p>

@@ -37,8 +37,9 @@ type MixerRowTab = {
 type MixerRowState = {
   volume: number // 0..MIXER_ROW_MAX_VOLUME (percent)
   muted: boolean
-  micMuted: boolean
-  cameraOff: boolean
+  // null = the extension has no opinion (default); rendered as "not muted/on".
+  micMuted: boolean | null
+  cameraOff: boolean | null
 }
 
 type MixerRowActivity = {
@@ -218,7 +219,7 @@ function MixerRow({
             onClick={handleMic}
             disabled={!activity.hasMic}
             aria-label={state.micMuted ? "Unmute mic" : "Mute mic"}
-            aria-pressed={state.micMuted}
+            aria-pressed={state.micMuted ?? false}
             tooltip={
               !activity.hasMic
                 ? "No microphone active in this tab"
@@ -235,7 +236,7 @@ function MixerRow({
             onClick={handleCamera}
             disabled={!activity.hasCamera}
             aria-label={state.cameraOff ? "Turn camera on" : "Turn camera off"}
-            aria-pressed={state.cameraOff}
+            aria-pressed={state.cameraOff ?? false}
             tooltip={
               !activity.hasCamera
                 ? "No camera active in this tab"
@@ -250,11 +251,11 @@ function MixerRow({
             variant="ghost"
             size="icon-sm"
             onClick={handleReset}
-            aria-label="Reset volume and mute"
+            aria-label="Reset volume, mute, and mic/camera overrides"
             disabled={!isAdjusted}
             tooltip={
               isAdjusted
-                ? "Reset to defaults (100% volume, unmuted)"
+                ? "Reset to defaults (100% volume, unmuted; clears mic/camera overrides)"
                 : "Already at defaults"
             }
           >

@@ -90,11 +90,11 @@ function sendBridgeVolume(volume: number): void {
   postBridge({ source: BRIDGE_SOURCE, kind: "apply-volume", volume })
 }
 
-function sendBridgeMicMuted(micMuted: boolean): void {
+function sendBridgeMicMuted(micMuted: boolean | null): void {
   postBridge({ source: BRIDGE_SOURCE, kind: "apply-mic-muted", micMuted })
 }
 
-function sendBridgeCameraOff(cameraOff: boolean): void {
+function sendBridgeCameraOff(cameraOff: boolean | null): void {
   postBridge({ source: BRIDGE_SOURCE, kind: "apply-camera-off", cameraOff })
 }
 

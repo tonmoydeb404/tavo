@@ -1,3 +1,5 @@
+import { brand } from "@workspace/brand"
+
 import {
   DEFAULT_VOLUME,
   clearMediaActivity,
@@ -35,6 +37,21 @@ const frameActivity = new Map<
 const lastAggregate = new Map<number, MediaActivity>()
 
 export default defineBackground(() => {
+  // Open the changelog page when the extension updates, so users see what's
+  // new after each release. Skipped on fresh install and during `wxt dev`
+  // (which fires spurious "update" events on every reload).
+  browser.runtime.onInstalled.addListener((details) => {
+    // `import.meta.env.DEV` is a Vite compile-time constant (replaced at build,
+    // dead-code eliminated in production), not a runtime env var — the turbo
+    // rule can't tell the two apart.
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    if (import.meta.env.DEV) return
+    if (details.reason !== "update") return
+    void browser.tabs.create({ url: `${brand.url}/changelog` }).catch(() => {
+      // No tab permission for the target URL, or the browser is mid-shutdown.
+    })
+  })
+
   // Reflect each tab's number of adjustments (volume/mute, mic, camera) as a
   // per-tab toolbar badge, so users can see (without opening the popup) which
   // specific tabs they left adjusted — e.g. a tab still muted after a call.
@@ -47,16 +64,19 @@ export default defineBackground(() => {
   void refreshBadge()
 
   // Apply stored state to a freshly-loaded tab (page reload, navigation).
+  // mic/camera are only re-applied when the user previously set a preference
+  // (non-null); a tab that never had its mic/camera toggled is left alone so
+  // we don't, e.g., force-unmute a mic the page muted on join.
   browser.tabs.onUpdated.addListener(async (tabId, changeInfo) => {
     if (changeInfo.status !== "complete") return
     const state = await getTabState(tabId)
     if (state.volume !== DEFAULT_VOLUME) {
       await sendVolumeToTab(tabId, state.volume)
     }
-    if (state.micMuted) {
+    if (state.micMuted !== null) {
       await sendMicMutedToTab(tabId, state.micMuted)
     }
-    if (state.cameraOff) {
+    if (state.cameraOff !== null) {
       await sendCameraOffToTab(tabId, state.cameraOff)
     }
   })
@@ -149,7 +169,7 @@ async function handleSetMuted(
 
 async function handleSetMicMuted(
   tabId: number,
-  micMuted: boolean,
+  micMuted: boolean | null,
 ): Promise<void> {
   const prev = await getTabState(tabId)
   const next = { ...prev, micMuted }
@@ -160,7 +180,7 @@ async function handleSetMicMuted(
 
 async function handleSetCameraOff(
   tabId: number,
-  cameraOff: boolean,
+  cameraOff: boolean | null,
 ): Promise<void> {
   const prev = await getTabState(tabId)
   const next = { ...prev, cameraOff }
@@ -178,8 +198,10 @@ async function handleReset(tabId: number): Promise<void> {
   const next: TabState = {
     volume: DEFAULT_VOLUME,
     muted: false,
-    micMuted: false,
-    cameraOff: false,
+    // Clear preferences: the extension goes "hands off" on mic/camera and
+    // leaves current tracks exactly as they are.
+    micMuted: null,
+    cameraOff: null,
   }
   await setTabState(tabId, next)
   await sendVolumeToTab(tabId, next.volume)
@@ -256,7 +278,7 @@ async function sendVolumeToTab(tabId: number, volume: number): Promise<void> {
 
 async function sendMicMutedToTab(
   tabId: number,
-  micMuted: boolean,
+  micMuted: boolean | null,
 ): Promise<void> {
   try {
     await browser.tabs.sendMessage(tabId, { type: "apply-mic-muted", micMuted })
@@ -267,7 +289,7 @@ async function sendMicMutedToTab(
 
 async function sendCameraOffToTab(
   tabId: number,
-  cameraOff: boolean,
+  cameraOff: boolean | null,
 ): Promise<void> {
   try {
     await browser.tabs.sendMessage(tabId, {
