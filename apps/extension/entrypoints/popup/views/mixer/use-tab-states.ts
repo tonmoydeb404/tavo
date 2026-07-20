@@ -25,9 +25,9 @@ function isResponse(value: unknown): value is Record<number, TabState> {
       !("muted" in v) ||
       typeof v.muted !== "boolean" ||
       !("micMuted" in v) ||
-      typeof v.micMuted !== "boolean" ||
+      (v.micMuted !== null && typeof v.micMuted !== "boolean") ||
       !("cameraOff" in v) ||
-      typeof v.cameraOff !== "boolean"
+      (v.cameraOff !== null && typeof v.cameraOff !== "boolean")
     ) {
       return false
     }
@@ -85,15 +85,15 @@ function useTabStates() {
   // Set when a send to the background fails (SW restart, etc.). Auto-clears.
   const [error, setError] = useState<string | null>(null)
 
-  const queryTabs = useCallback(async (all: boolean): Promise<Tab[]> => {
-    const query = all ? {} : { audible: true }
-    const list = await browser.tabs.query(query)
-    list.sort((a, b) => {
-      if ((b.audible ? 1 : 0) !== (a.audible ? 1 : 0)) {
-        return (b.audible ? 1 : 0) - (a.audible ? 1 : 0)
-      }
-      return (b.lastAccessed ?? 0) - (a.lastAccessed ?? 0)
-    })
+  const queryTabs = useCallback(async (): Promise<Tab[]> => {
+    // Always query every tab. The default (non-"All tabs") view filters down
+    // to media-active tabs client-side, because Chrome's `audible` flag only
+    // covers speaker OUTPUT — it misses tabs that have mic/camera access but
+    // no sound (e.g. a Meet tab with mic muted). Those are tracked in our own
+    // mediaActivity, so the union (audible | hasMic | hasCamera) is computed
+    // after merging with activity in the rows memo below.
+    const list = await browser.tabs.query({})
+    list.sort((a, b) => (b.lastAccessed ?? 0) - (a.lastAccessed ?? 0))
     return list
   }, [])
 
@@ -103,7 +103,7 @@ function useTabStates() {
     void (async () => {
       try {
         const [list, statesResult, activityResult] = await Promise.all([
-          queryTabs(showAll),
+          queryTabs(),
           browser.runtime.sendMessage({
             type: "get-all-states",
           } satisfies ToBackgroundMessage),
@@ -130,7 +130,7 @@ function useTabStates() {
   useEffect(() => {
     const handler = () => {
       void (async () => {
-        const list = await queryTabs(showAll)
+        const list = await queryTabs()
         setTabs(list)
       })()
     }
@@ -148,7 +148,7 @@ function useTabStates() {
       browser.tabs.onAttached.removeListener(handler)
       browser.tabs.onDetached.removeListener(handler)
     }
-  }, [queryTabs, showAll])
+  }, [queryTabs])
 
   // Sync with background broadcasts.
   useEffect(() => {
@@ -266,15 +266,25 @@ function useTabStates() {
     }
   }, [])
 
-  const rows = useMemo(
-    () =>
-      tabs.map((tab) => ({
-        tab,
-        state: states[tab.id ?? -1] ?? defaultTabState(),
-        activity: mediaActivity[tab.id ?? -1] ?? defaultMediaActivity(),
-      })),
-    [tabs, states, mediaActivity],
-  )
+  const rows = useMemo(() => {
+    const merged = tabs.map((tab) => {
+      const state = states[tab.id ?? -1] ?? defaultTabState()
+      const activity = mediaActivity[tab.id ?? -1] ?? defaultMediaActivity()
+      // A tab is "media-active" if it's producing sound OR accessing a
+      // mic/camera. This drives the default (non-"All tabs") view.
+      const mediaActive = !!tab.audible || activity.hasMic || activity.hasCamera
+      return { tab, state, activity, mediaActive }
+    })
+    // Media-active tabs first, then most-recently-used. Stable across renders
+    // since queryTabs already pre-sorted by lastAccessed.
+    merged.sort((a, b) => {
+      if (a.mediaActive !== b.mediaActive) {
+        return a.mediaActive ? -1 : 1
+      }
+      return (b.tab.lastAccessed ?? 0) - (a.tab.lastAccessed ?? 0)
+    })
+    return showAll ? merged : merged.filter((row) => row.mediaActive)
+  }, [tabs, states, mediaActivity, showAll])
 
   return {
     rows,

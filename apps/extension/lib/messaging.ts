@@ -13,8 +13,11 @@
 export type TabState = {
   volume: number // 0..400 (percent). 100 = unity gain.
   muted: boolean
-  micMuted: boolean // mic input tracks disabled (track.enabled = false)
-  cameraOff: boolean // camera input tracks disabled (track.enabled = false)
+  // null = the extension has no opinion: never touch track.enabled. The default
+  // until the user clicks the mic/camera button, so a tab the page itself muted
+  // (e.g. Google Meet) is left alone instead of being force-unmuted on load.
+  micMuted: boolean | null
+  cameraOff: boolean | null
 }
 
 // Observed (not user-set) per-tab media activity, used to disable the mic /
@@ -42,12 +45,12 @@ export type ToBackgroundMessage =
   | {
       type: "set-mic-muted"
       tabId: number
-      micMuted: boolean
+      micMuted: boolean | null
     }
   | {
       type: "set-camera-off"
       tabId: number
-      cameraOff: boolean
+      cameraOff: boolean | null
     }
   | {
       type: "reset"
@@ -86,11 +89,11 @@ export type ToContentMessage =
     }
   | {
       type: "apply-mic-muted"
-      micMuted: boolean
+      micMuted: boolean | null
     }
   | {
       type: "apply-camera-off"
-      cameraOff: boolean
+      cameraOff: boolean | null
     }
 
 export type AnyMessage =
@@ -112,12 +115,12 @@ export type BridgeMessage =
   | {
       source: typeof BRIDGE_SOURCE
       kind: "apply-mic-muted"
-      micMuted: boolean
+      micMuted: boolean | null
     }
   | {
       source: typeof BRIDGE_SOURCE
       kind: "apply-camera-off"
-      cameraOff: boolean
+      cameraOff: boolean | null
     }
   // MAIN-world engine -> isolated content: current per-frame track counts.
   | {
@@ -141,9 +144,15 @@ export function isBridgeMessage(value: unknown): value is BridgeMessage {
     case "apply-volume":
       return "volume" in value && typeof value.volume === "number"
     case "apply-mic-muted":
-      return "micMuted" in value && typeof value.micMuted === "boolean"
+      return (
+        "micMuted" in value &&
+        (value.micMuted === null || typeof value.micMuted === "boolean")
+      )
     case "apply-camera-off":
-      return "cameraOff" in value && typeof value.cameraOff === "boolean"
+      return (
+        "cameraOff" in value &&
+        (value.cameraOff === null || typeof value.cameraOff === "boolean")
+      )
     case "report-activity":
       return (
         "audio" in value &&
@@ -169,7 +178,7 @@ export function tabStateKey(tabId: number): string {
 }
 
 export function defaultTabState(): TabState {
-  return { volume: DEFAULT_VOLUME, muted: false, micMuted: false, cameraOff: false }
+  return { volume: DEFAULT_VOLUME, muted: false, micMuted: null, cameraOff: null }
 }
 
 export async function getTabState(tabId: number): Promise<TabState> {
@@ -189,8 +198,8 @@ function isTabState(value: unknown): value is TabState {
     "cameraOff" in value &&
     typeof value.volume === "number" &&
     typeof value.muted === "boolean" &&
-    typeof value.micMuted === "boolean" &&
-    typeof value.cameraOff === "boolean"
+    (value.micMuted === null || typeof value.micMuted === "boolean") &&
+    (value.cameraOff === null || typeof value.cameraOff === "boolean")
   )
 }
 

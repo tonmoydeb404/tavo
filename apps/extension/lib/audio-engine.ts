@@ -61,8 +61,12 @@ class AudioEngine {
   // of a given kind. Removed via `track.ended` so the Sets don't pin dead refs.
   private audioTracks = new Set<MediaStreamTrack>()
   private videoTracks = new Set<MediaStreamTrack>()
-  private micMuted = false
-  private cameraOff = false
+  // null = "no opinion" (the default). The engine MUST NOT touch track.enabled
+  // while null, so a page that muted its own mic (e.g. Google Meet on join) is
+  // left exactly as-is. Only when the user toggles do we store true/false and
+  // force tracks.
+  private micMuted: boolean | null = null
+  private cameraOff: boolean | null = null
   // Optional listener notified whenever audio/video track counts change, so
   // the host (main.content.ts) can report activity to the background for the
   // popup's "disable button when no media" UX.
@@ -276,7 +280,9 @@ class AudioEngine {
     if (track.kind === "audio") {
       if (this.audioTracks.has(track)) return
       this.audioTracks.add(track)
-      track.enabled = !this.micMuted
+      // Only force enabled when the user has expressed a preference; otherwise
+      // leave whatever the page set (Meet may have muted on join).
+      if (this.micMuted !== null) track.enabled = !this.micMuted
       track.addEventListener(
         "ended",
         () => {
@@ -289,7 +295,7 @@ class AudioEngine {
     } else if (track.kind === "video") {
       if (this.videoTracks.has(track)) return
       this.videoTracks.add(track)
-      track.enabled = !this.cameraOff
+      if (this.cameraOff !== null) track.enabled = !this.cameraOff
       track.addEventListener(
         "ended",
         () => {
@@ -305,10 +311,12 @@ class AudioEngine {
   /**
    * Toggle all known mic tracks via `track.enabled` (reversible: silent
    * frames, WebRTC connection stays alive). Also remembered so tracks from
-   * future getUserMedia calls adopt this state.
+   * future getUserMedia calls adopt this state. Pass null to clear the
+   * preference without touching current tracks (engine goes "hands off").
    */
-  setMicMuted(micMuted: boolean): void {
+  setMicMuted(micMuted: boolean | null): void {
     this.micMuted = micMuted
+    if (micMuted === null) return
     for (const track of this.audioTracks) {
       track.enabled = !micMuted
     }
@@ -317,10 +325,12 @@ class AudioEngine {
   /**
    * Toggle all known camera tracks via `track.enabled` (reversible: black
    * frames, WebRTC connection stays alive). Also remembered so tracks from
-   * future getUserMedia calls adopt this state.
+   * future getUserMedia calls adopt this state. Pass null to clear the
+   * preference without touching current tracks.
    */
-  setCameraOff(cameraOff: boolean): void {
+  setCameraOff(cameraOff: boolean | null): void {
     this.cameraOff = cameraOff
+    if (cameraOff === null) return
     for (const track of this.videoTracks) {
       track.enabled = !cameraOff
     }
