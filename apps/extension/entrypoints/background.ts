@@ -1,3 +1,5 @@
+import { brand } from "@workspace/brand"
+
 import {
   DEFAULT_VOLUME,
   clearMediaActivity,
@@ -35,6 +37,21 @@ const frameActivity = new Map<
 const lastAggregate = new Map<number, MediaActivity>()
 
 export default defineBackground(() => {
+  // Open the changelog page when the extension updates, so users see what's
+  // new after each release. Skipped on fresh install and during `wxt dev`
+  // (which fires spurious "update" events on every reload).
+  browser.runtime.onInstalled.addListener((details) => {
+    // `import.meta.env.DEV` is a Vite compile-time constant (replaced at build,
+    // dead-code eliminated in production), not a runtime env var — the turbo
+    // rule can't tell the two apart.
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    if (import.meta.env.DEV) return
+    if (details.reason !== "update") return
+    void browser.tabs.create({ url: `${brand.url}/changelog` }).catch(() => {
+      // No tab permission for the target URL, or the browser is mid-shutdown.
+    })
+  })
+
   // Reflect each tab's number of adjustments (volume/mute, mic, camera) as a
   // per-tab toolbar badge, so users can see (without opening the popup) which
   // specific tabs they left adjusted — e.g. a tab still muted after a call.
