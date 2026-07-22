@@ -25,7 +25,8 @@ export const brand = {
   links: {
     github: "https://github.com/tonmoydeb404/tavo",
     email: "tonmoydeb404@gmail.com",
-    chromeStore: "https://chrome.google.com/webstore/detail/tavo",
+    chromeStore:
+      "https://chromewebstore.google.com/detail/hhfdekajhmbohefcoilmclchpbedpcon",
   },
 
   /** Developer credit. */
