@@ -1,5 +1,6 @@
 "use client"
 
+import { faviconForTitle } from "@/assets"
 import { siteConfig } from "@/configs/site-config"
 import {
   MixerRow,
@@ -20,7 +21,7 @@ const rows: Row[] = [
       id: 1,
       title: "youtube.com/watch",
       audible: true,
-      favIconUrl: "https://www.youtube.com/s/desktop/e2e75771/img/favicon.ico",
+      favIconUrl: faviconForTitle("youtube.com/watch"),
     },
     state: { volume: 50, muted: false, micMuted: false, cameraOff: false },
     activity: { hasMic: false, hasCamera: false },
@@ -29,7 +30,7 @@ const rows: Row[] = [
     tab: {
       id: 2,
       title: "meet.google.com",
-      favIconUrl: "https://www.gstatic.com/meet/icons/favicon-2026-v2-96dp.png",
+      favIconUrl: faviconForTitle("meet.google.com"),
     },
     state: { volume: 150, muted: false, micMuted: false, cameraOff: true },
     activity: { hasMic: true, hasCamera: true },
