@@ -62,6 +62,8 @@ function useTabStates() {
     Record<number, MediaActivity>
   >({})
   const [showAll, setShowAllState] = useState(false)
+  // The active tab in the popup's window; sorted to the top of the list.
+  const [activeTabId, setActiveTabId] = useState<number | null>(null)
 
   // Load persisted "Show all tabs" preference on mount.
   useEffect(() => {
@@ -70,6 +72,28 @@ function useTabStates() {
       const stored = await getShowAllTabs()
       if (cancelled) return
       setShowAllState(stored)
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  // Identify the active tab in the window the popup belongs to. In a popup
+  // context `currentWindow: true` resolves to that window, yielding the tab
+  // the user was on when they opened the popup.
+  useEffect(() => {
+    let cancelled = false
+    void (async () => {
+      try {
+        const [active] = await browser.tabs.query({
+          active: true,
+          currentWindow: true,
+        })
+        if (cancelled) return
+        if (active?.id != null) setActiveTabId(active.id)
+      } catch {
+        // `currentWindow` may be unavailable in some hosts; ignore.
+      }
     })()
     return () => {
       cancelled = true
@@ -92,9 +116,10 @@ function useTabStates() {
     // no sound (e.g. a Meet tab with mic muted). Those are tracked in our own
     // mediaActivity, so the union (audible | hasMic | hasCamera) is computed
     // after merging with activity in the rows memo below.
-    const list = await browser.tabs.query({})
-    list.sort((a, b) => (b.lastAccessed ?? 0) - (a.lastAccessed ?? 0))
-    return list
+    // Keep the browser's natural order (window, then tab position). Avoid
+    // sorting by `lastAccessed` here — it updates on every tab focus and
+    // makes rows visibly jump around while the popup is open.
+    return browser.tabs.query({})
   }, [])
 
   // Initial parallel load + refresh whenever `showAll` toggles.
@@ -275,16 +300,18 @@ function useTabStates() {
       const mediaActive = !!tab.audible || activity.hasMic || activity.hasCamera
       return { tab, state, activity, mediaActive }
     })
-    // Media-active tabs first, then most-recently-used. Stable across renders
-    // since queryTabs already pre-sorted by lastAccessed.
-    merged.sort((a, b) => {
-      if (a.mediaActive !== b.mediaActive) {
-        return a.mediaActive ? -1 : 1
-      }
-      return (b.tab.lastAccessed ?? 0) - (a.tab.lastAccessed ?? 0)
-    })
-    return showAll ? merged : merged.filter((row) => row.mediaActive)
-  }, [tabs, states, mediaActivity, showAll])
+    // Only reorder to pin the current tab on top; everything else keeps the
+    // browser's stable natural order. Other sorts (lastAccessed, media-active)
+    // cause rows to shift constantly while the popup is open.
+    const ordered =
+      activeTabId == null
+        ? merged
+        : [
+            ...merged.filter((row) => row.tab.id === activeTabId),
+            ...merged.filter((row) => row.tab.id !== activeTabId),
+          ]
+    return showAll ? ordered : ordered.filter((row) => row.mediaActive)
+  }, [tabs, states, mediaActivity, showAll, activeTabId])
 
   return {
     rows,
