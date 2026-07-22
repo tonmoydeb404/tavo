@@ -24,6 +24,32 @@ type Release = {
 
 const releases: Release[] = [
   {
+    version: "1.1.4",
+    date: "2026-07-22",
+    changes: [
+      {
+        type: "improved",
+        text: 'Mic and camera toggles now default to "no opinion" instead of forcing unmuted — a tab that muted its own mic/camera on join (e.g. Google Meet) is left exactly as-is until you explicitly toggle it from the popup.',
+      },
+      {
+        type: "improved",
+        text: "The active tab is now pinned to the top of the mixer list, and rows no longer jump around as tabs are focused.",
+      },
+      {
+        type: "improved",
+        text: 'The default (non-"All tabs") mixer view now also surfaces tabs with an active mic or camera, not just tabs producing sound.',
+      },
+      {
+        type: "added",
+        text: "The changelog page now opens automatically in a new tab after the extension updates.",
+      },
+      {
+        type: "fixed",
+        text: 'Reset now also clears mic/camera overrides, returning a tab to "no opinion" instead of forcing it unmuted/on.',
+      },
+    ],
+  },
+  {
     version: "1.0.0",
     date: "2026-07-20",
     changes: [
