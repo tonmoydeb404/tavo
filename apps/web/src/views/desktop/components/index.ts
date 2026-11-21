@@ -1,1 +1,2 @@
-export * from "./tray-mockup"
+export * from "./copy-command"
+export * from "./tray-demo"

@@ -1,78 +1,81 @@
-import {
-  IconDownload,
-  IconShieldCheck,
-  IconTerminal2,
-} from "@tabler/icons-react"
-import type { ComponentType } from "react"
-
 import { siteConfig } from "@/configs/site-config"
-import { IconCard } from "@workspace/ui/components/icon-card"
 
 import { SectionHeading } from "@/views/extension/components"
 
+import { CopyCommand } from "../components"
+
 type Step = {
-  icon: ComponentType<{ className?: string }>
   title: string
   description: string
 }
 
 const steps: Step[] = [
   {
-    icon: IconDownload,
     title: "Install",
     description:
-      "Run the one-line installer below, or download the .dmg from GitHub Releases and drag Tavo into Applications.",
+      "Run the one-liner, or grab the .dmg from GitHub Releases and drag Tavo into Applications.",
   },
   {
-    icon: IconShieldCheck,
     title: "Allow audio access",
     description:
-      "To route an app's audio, macOS asks for permission under Privacy & Security → Screen & System Audio Recording. Device switching and mic mute need none.",
+      "Only for app routing: macOS asks once under Privacy & Security → Screen & System Audio Recording. Device switching and mic mute need nothing.",
   },
   {
-    icon: IconTerminal2,
     title: "Use the menu bar",
     description:
-      "Click the Tavo icon, pick a device, mute your mic, or route an app. That's it.",
+      "Click the Tavo icon, pick a device, mute your mic, route an app. That's the whole manual.",
   },
 ]
 
 function InstallSection() {
   return (
-    <section id="install" className="container py-20">
-      <SectionHeading
-        eyebrow="Install"
-        title="Up and running in a minute"
-        description="Apple Silicon Macs. Free, with no account and no configuration files."
-      />
-
-      <div className="mx-auto mt-10 max-w-3xl overflow-x-auto rounded-xl border border-border/60 bg-card px-5 py-4 text-left">
-        <code className="font-mono text-sm whitespace-nowrap">
-          {siteConfig.desktop.installScript}
-        </code>
-      </div>
-      <p className="mt-3 text-center text-sm text-muted-foreground">
-        Requires{" "}
-        <a
-          href="https://brew.sh"
-          className="underline underline-offset-4 hover:text-foreground"
-        >
-          Homebrew
-        </a>
-        . The app is not yet notarized, and the installer clears the macOS
-        quarantine flag for you.
-      </p>
-
-      <div className="mt-14 grid gap-6 md:grid-cols-3">
-        {steps.map((step, index) => (
-          <IconCard
-            key={step.title}
-            icon={step.icon}
-            title={step.title}
-            description={step.description}
-            number={index + 1}
+    <section id="install" className="container pb-24">
+      <div className="rounded-3xl border border-border bg-muted/50 p-6 sm:p-10 lg:p-14">
+        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+          <SectionHeading
+            eyebrow="Install"
+            title="Up and running in a minute"
+            description="No account, no config files. Needs Homebrew."
           />
-        ))}
+
+          <CopyCommand
+            command={siteConfig.desktop.installScript}
+            className="mt-10 text-left"
+          />
+
+          <p className="mt-4 text-sm text-pretty text-muted-foreground">
+            Tavo isn&apos;t notarized with Apple yet, so the installer clears
+            the quarantine flag for you. Prefer to check first? The{" "}
+            <a
+              href={siteConfig.links.github}
+              className="underline underline-offset-4 hover:text-foreground"
+            >
+              source is public
+            </a>
+            .
+          </p>
+        </div>
+
+        <ol className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
+          {steps.map((step, index) => (
+            <li
+              key={step.title}
+              className="flex min-w-0 flex-col gap-4 rounded-2xl border border-border bg-card p-6"
+            >
+              <span className="font-heading text-5xl leading-none font-extrabold tracking-tighter text-primary">
+                {index + 1}
+              </span>
+              <div>
+                <h3 className="font-heading text-xl font-bold tracking-tight">
+                  {step.title}
+                </h3>
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  {step.description}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   )

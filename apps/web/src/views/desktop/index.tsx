@@ -19,7 +19,7 @@ function DesktopView() {
       <InstallSection />
       <FaqSection />
       <CtaSection
-        title="Your Mac's audio, one click away"
+        title="Stop digging through System Settings."
         description="Download Tavo for macOS and manage devices, mic, and app audio from the menu bar. Free, private, and open source."
         primaryCta={{
           href: siteConfig.links.releases,

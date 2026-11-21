@@ -53,7 +53,7 @@ export const faqs: Faq[] = [
 
 function FaqSection() {
   return (
-    <section id="faq" className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
+    <section id="faq" className="mx-auto max-w-3xl px-4 pb-24 sm:px-6">
       <SectionHeading
         eyebrow="FAQ"
         title="Questions, answered"
