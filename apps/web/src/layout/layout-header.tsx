@@ -29,15 +29,51 @@ const navLinks = [
 
 export const LayoutHeader = () => {
   const [open, setOpen] = React.useState(false)
+  const [overHero, setOverHero] = React.useState(true)
+  const headerRef = React.useRef<HTMLElement>(null)
   const pathname = usePathname()
+
+  // The navbar stays solid while it sits over the page's first section (the
+  // hero), then turns translucent once that section has scrolled away.
+  React.useEffect(() => {
+    function update() {
+      const header = headerRef.current
+      if (!header) return
+      // Skip non-visual siblings such as JSON-LD scripts to find the hero.
+      let hero = header.nextElementSibling
+      while (hero && hero.getBoundingClientRect().height === 0) {
+        hero = hero.nextElementSibling
+      }
+      if (!hero) return
+      setOverHero(hero.getBoundingClientRect().bottom > header.offsetHeight)
+    }
+
+    update()
+    window.addEventListener("scroll", update, { passive: true })
+    window.addEventListener("resize", update)
+    return () => {
+      window.removeEventListener("scroll", update)
+      window.removeEventListener("resize", update)
+    }
+  }, [pathname])
   const cta =
     pathname === pathsConfig.desktop
       ? { href: siteConfig.links.releases, label: "Download for Mac" }
       : { href: siteConfig.links.chromeStore, label: "Add to Chrome" }
 
   return (
-    <header className="fixed top-0 left-1/2 z-50 container -translate-x-1/2 px-3 pt-3 sm:pt-4">
-      <div className="mx-auto flex max-w-4xl items-center justify-between gap-3 rounded-full border border-border/60 bg-background/70 px-4 py-3 shadow-lg backdrop-blur-xl supports-backdrop-filter:bg-background/55">
+    <header
+      ref={headerRef}
+      className="fixed top-0 left-1/2 z-50 container -translate-x-1/2 px-3 pt-3 sm:pt-4"
+    >
+      <div
+        className={cn(
+          "mx-auto flex max-w-4xl items-center justify-between gap-3 rounded-full border px-4 py-3 shadow-lg transition-colors",
+          overHero
+            ? "border-border bg-background"
+            : "border-border/60 bg-background/70 backdrop-blur-xl supports-backdrop-filter:bg-background/55"
+        )}
+      >
         <Link
           href={pathsConfig.home}
           className="flex items-center gap-2.5 rounded-full"
