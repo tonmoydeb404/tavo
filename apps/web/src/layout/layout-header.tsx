@@ -58,7 +58,7 @@ export const LayoutHeader = () => {
   }, [pathname])
   const cta =
     pathname === pathsConfig.desktop
-      ? { href: siteConfig.links.releases, label: "Download for Mac" }
+      ? { href: pathsConfig.desktopInstall, label: "Download for Mac" }
       : { href: siteConfig.links.chromeStore, label: "Add to Chrome" }
 
   return (

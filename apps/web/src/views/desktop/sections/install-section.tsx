@@ -29,7 +29,7 @@ const steps: Step[] = [
 
 function InstallSection() {
   return (
-    <section id="install" className="container pb-24">
+    <section id="install" className="container scroll-mt-20 pb-24">
       <div className="rounded-3xl border border-border bg-muted/50 p-6 sm:p-10 lg:p-14">
         <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
           <SectionHeading

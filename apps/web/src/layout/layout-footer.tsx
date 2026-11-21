@@ -26,7 +26,7 @@ const footerNav = [
       { href: pathsConfig.extension, label: "Browser extension" },
       { href: pathsConfig.desktop, label: "Mac app" },
       { href: siteConfig.links.chromeStore, label: "Chrome Web Store" },
-      { href: siteConfig.links.releases, label: "Mac downloads" },
+      { href: pathsConfig.desktopInstall, label: "Mac downloads" },
     ],
   },
   {

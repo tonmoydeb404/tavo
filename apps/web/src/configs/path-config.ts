@@ -2,6 +2,7 @@ class Paths {
   readonly home = "/"
   readonly extension = "/extension"
   readonly desktop = "/desktop"
+  readonly desktopInstall = "/desktop#install"
   readonly volumeBooster = "/volume-booster"
   readonly muteTab = "/mute-tab"
   readonly micToggle = "/mic-toggle"

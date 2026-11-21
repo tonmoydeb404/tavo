@@ -46,11 +46,30 @@ forgot about — all without leaving the page.
 
 ## Install
 
-### From the Chrome Web Store
+### Mac app (Tavo desktop)
+
+macOS on Apple Silicon, via the install script (needs
+[Homebrew](https://brew.sh)):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/tonmoydeb404/tavo/main/setup/unix.sh | sh
+```
+
+To uninstall:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/tonmoydeb404/tavo/main/setup/unix-uninstall.sh | sh
+```
+
+Or grab the `.dmg` from [Releases](https://github.com/tonmoydeb404/tavo/releases).
+
+### Browser extension
+
+#### From the Chrome Web Store
 
 _(Link goes here once published.)_
 
-### Manual load (developer / unpacked)
+#### Manual load (developer / unpacked)
 
 1. Download the latest build from
    [Releases](https://github.com/tonmoydeb404/tavo/releases), or build from

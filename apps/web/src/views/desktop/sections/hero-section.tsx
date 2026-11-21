@@ -1,6 +1,7 @@
 import { IconBrandApple, IconBrandGithubFilled } from "@tabler/icons-react"
 import Link from "next/link"
 
+import { pathsConfig } from "@/configs/path-config"
 import { siteConfig } from "@/configs/site-config"
 import { buttonVariants } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
@@ -36,7 +37,7 @@ function HeroSection() {
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link
-              href={siteConfig.links.releases}
+              href={pathsConfig.desktopInstall}
               className={cn(buttonVariants({ size: "lg" }), "h-11 px-5")}
             >
               <IconBrandApple className="size-4" />

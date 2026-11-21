@@ -1,6 +1,7 @@
 import { IconBrandApple, IconBrandGithubFilled } from "@tabler/icons-react"
 
 import { CtaSection } from "@/components/sections"
+import { pathsConfig } from "@/configs/path-config"
 import { siteConfig } from "@/configs/site-config"
 import {
   FaqSection,
@@ -22,7 +23,7 @@ function DesktopView() {
         title="Stop digging through System Settings."
         description="Download Tavo for macOS and manage devices, mic, and app audio from the menu bar. Free, private, and open source."
         primaryCta={{
-          href: siteConfig.links.releases,
+          href: pathsConfig.desktopInstall,
           label: "Download for macOS",
           icon: IconBrandApple,
         }}
