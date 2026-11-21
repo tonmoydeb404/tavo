@@ -1,6 +1,5 @@
 import type { ReactNode } from "react"
 
-import { Badge } from "@workspace/ui/components/badge"
 import { cn } from "@workspace/ui/lib/utils"
 
 type SectionHeadingProps = {
@@ -21,18 +20,22 @@ function SectionHeading({
   return (
     <div
       className={cn(
-        "flex flex-col gap-3",
+        "flex flex-col gap-4",
         align === "center" && "items-center text-center",
         align === "left" && "items-start text-left",
         className
       )}
     >
       {eyebrow ? (
-        <Badge variant="secondary" className="tracking-wide uppercase">
+        <span className="inline-flex items-center gap-2 font-mono text-xs font-medium tracking-widest text-primary uppercase">
+          <span
+            aria-hidden="true"
+            className="size-1.5 rounded-full bg-primary"
+          />
           {eyebrow}
-        </Badge>
+        </span>
       ) : null}
-      <h2 className="max-w-2xl font-heading text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+      <h2 className="max-w-3xl font-heading text-4xl font-bold tracking-tight text-balance sm:text-5xl">
         {title}
       </h2>
       {description ? (
