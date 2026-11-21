@@ -1,3 +1,5 @@
 export * from "./hero-section"
+export * from "./ticker-section"
+export * from "./moments-section"
 export * from "./products-section"
 export * from "./principles-section"

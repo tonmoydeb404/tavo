@@ -1,54 +1,51 @@
-import { IconBrandGithub, IconGift, IconLock } from "@tabler/icons-react"
-import type { ComponentType } from "react"
-
-import { IconCard } from "@workspace/ui/components/icon-card"
-
-import { SectionHeading } from "@/views/extension/components"
-
 type Principle = {
-  icon: ComponentType<{ className?: string }>
-  title: string
+  stat: string
+  label: string
   description: string
 }
 
 const principles: Principle[] = [
   {
-    icon: IconGift,
-    title: "Free, no account",
-    description:
-      "Install and use it. No sign-up, no trial, no paywall on any control.",
+    stat: "$0",
+    label: "Forever free",
+    description: "No trial, no paywall on any control.",
   },
   {
-    icon: IconLock,
-    title: "Private by design",
-    description:
-      "Nothing is sent to a server. Settings stay on your device and audio never leaves it.",
+    stat: "0",
+    label: "Accounts",
+    description: "Install it and use it. There's nothing to sign up for.",
   },
   {
-    icon: IconBrandGithub,
-    title: "Open source",
-    description:
-      "Both the extension and the Mac app live in one public repository you can read and build.",
+    stat: "0 B",
+    label: "Audio uploaded",
+    description: "Settings stay on your device. Audio never leaves it.",
+  },
+  {
+    stat: "100%",
+    label: "Open source",
+    description: "Extension and Mac app live in one public repository.",
   },
 ]
 
 function PrinciplesSection() {
   return (
-    <section className="container pb-20">
-      <SectionHeading
-        eyebrow="Principles"
-        title="Small tools that respect you"
-        description="Whichever one you install, the ground rules are the same."
-      />
-
-      <div className="mt-14 grid gap-6 md:grid-cols-3">
+    <section className="container pb-24">
+      <div className="grid overflow-hidden rounded-3xl border border-border bg-card sm:grid-cols-2 lg:grid-cols-4">
         {principles.map((principle) => (
-          <IconCard
-            key={principle.title}
-            icon={principle.icon}
-            title={principle.title}
-            description={principle.description}
-          />
+          <div
+            key={principle.label}
+            className="flex flex-col gap-3 border-b border-border p-8 last:border-b-0 sm:odd:border-r lg:border-r lg:border-b-0 lg:last:border-r-0"
+          >
+            <span className="font-heading text-6xl leading-none font-extrabold tracking-tighter text-primary">
+              {principle.stat}
+            </span>
+            <span className="font-mono text-xs tracking-widest uppercase">
+              {principle.label}
+            </span>
+            <p className="text-sm text-muted-foreground">
+              {principle.description}
+            </p>
+          </div>
         ))}
       </div>
     </section>
