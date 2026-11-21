@@ -1,0 +1,76 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Tavo",
+  "version": "0.1.0",
+  "identifier": "com.tavo.desktop",
+  "build": {
+    "beforeDevCommand": "pnpm dev:vite",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "pnpm build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Tavo",
+        "hiddenTitle": true,
+        "width": 420,
+        "height": 720,
+        "minWidth": 380,
+        "minHeight": 560,
+        "maxWidth": 560,
+        "maxHeight": 940,
+        "center": true,
+        "resizable": true,
+        "decorations": true,
+        "transparent": false,
+        "visible": false,
+        "skipTaskbar": false,
+        "alwaysOnTop": false
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/tonmoydeb404/tavo/releases/latest/download/latest.json"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdCRTQ2RkU1NzJGMkQzMTcKUldRWDAvSnk1Vy9rZSt6TDczN0liblZKdnNKQjFqa0RWTWcyRDNhMmFVY1lkdTh3eGJmcm1xMFYK"
+    },
+    "deep-link": {
+      "desktop": {
+        "schemes": [
+          "tavo"
+        ]
+      }
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "createUpdaterArtifacts": true,
+    "publisher": "Tonmoy Deb",
+    "category": "public.app-category.utilities",
+    "shortDescription": "Menu-bar audio control for macOS — switch devices, mute the mic, route app audio.",
+    "longDescription": "Tavo is a menu-bar app built with Tauri 2 that puts system audio under your control: switch microphones and outputs from the menu bar, mute the mic globally with a hotkey, and route any app's audio to a specific device — for example, YouTube to your speakers while a phone call plays on your earphones.",
+    "copyright": "Copyright (c) 2026 Tonmoy Deb",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "macOS": {
+      "minimumSystemVersion": "14.2"
+    },
+    "linux": {
+      "deb": {
+        "desktopTemplate": "linux-main.desktop"
+      }
+    }
+  }
+}
