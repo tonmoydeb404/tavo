@@ -7,7 +7,7 @@ export const brand = {
   "appName": "Tavo",
   "slug": "tavo",
   "identifier": "com.tavo.desktop",
-  "version": "0.1.0",
+  "version": "1.2.0",
   "developer": {
     "name": "Tonmoy Deb",
     "website": "https://tonmoydeb.com"
