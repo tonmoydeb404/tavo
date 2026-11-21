@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "@workspace/ui/components/accordion"
 
-import { SectionHeading } from "@/views/home/components"
+import { SectionHeading } from "@/views/extension/components"
 
 type Faq = {
   question: string

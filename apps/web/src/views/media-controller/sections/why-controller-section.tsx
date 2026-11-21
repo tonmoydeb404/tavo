@@ -1,4 +1,4 @@
-import { SectionHeading } from "@/views/home/components"
+import { SectionHeading } from "@/views/extension/components"
 
 function WhyControllerSection() {
   return (

@@ -52,7 +52,8 @@ function BrowserMockup({ className }: { className?: string }) {
     const iconRect = iconEl.getBoundingClientRect()
 
     setTarget({
-      x: iconRect.left - browserRect.left + iconRect.width / 2 - CURSOR_SIZE / 2,
+      x:
+        iconRect.left - browserRect.left + iconRect.width / 2 - CURSOR_SIZE / 2,
       y: iconRect.top - browserRect.top + iconRect.height / 2 - CURSOR_SIZE / 2,
     })
 
@@ -192,7 +193,7 @@ function BrowserMockup({ className }: { className?: string }) {
 
         {/* Popup */}
         <motion.div
-          className="absolute right-3 top-2"
+          className="absolute top-2 right-3"
           style={{ opacity: popupOpacity, y: popupY }}
         >
           <MixerMockup />
@@ -205,7 +206,7 @@ function BrowserMockup({ className }: { className?: string }) {
         system and can actually reach the toolbar icon.
       */}
       <motion.div
-        className="pointer-events-none absolute left-0 top-0 z-10"
+        className="pointer-events-none absolute top-0 left-0 z-10"
         style={{
           x: cursorX,
           y: cursorY,

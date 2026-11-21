@@ -137,7 +137,7 @@ function ScreenshotFrame({
         >
           <div
             ref={setCaptureNode}
-            className={cn("absolute left-0 top-0 origin-top-left", className)}
+            className={cn("absolute top-0 left-0 origin-top-left", className)}
             style={{
               width,
               height,

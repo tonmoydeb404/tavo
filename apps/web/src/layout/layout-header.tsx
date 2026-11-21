@@ -2,6 +2,7 @@
 
 import { IconMenu2 } from "@tabler/icons-react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import * as React from "react"
 
 import { assets } from "@/assets"
@@ -20,14 +21,19 @@ import { cn } from "@workspace/ui/lib/utils"
 import Image from "next/image"
 
 const navLinks = [
-  { href: "/#features", label: "Features" },
-  { href: "/#how-it-works", label: "How it works" },
-  { href: "/#faq", label: "FAQ" },
+  { href: pathsConfig.extension, label: "Extension" },
+  { href: pathsConfig.desktop, label: "Mac app" },
+  { href: pathsConfig.faq, label: "FAQ" },
   { href: pathsConfig.privacy, label: "Privacy" },
 ]
 
 export const LayoutHeader = () => {
   const [open, setOpen] = React.useState(false)
+  const pathname = usePathname()
+  const cta =
+    pathname === pathsConfig.desktop
+      ? { href: siteConfig.links.releases, label: "Download for Mac" }
+      : { href: siteConfig.links.chromeStore, label: "Add to Chrome" }
 
   return (
     <header className="fixed top-0 left-1/2 z-50 container -translate-x-1/2 px-3 pt-3 sm:pt-4">
@@ -56,13 +62,13 @@ export const LayoutHeader = () => {
 
         <div className="flex items-center gap-1">
           <Link
-            href={siteConfig.links.chromeStore}
+            href={cta.href}
             className={cn(
               buttonVariants({ size: "sm" }),
               "hidden rounded-full sm:inline-flex"
             )}
           >
-            Add to Chrome
+            {cta.label}
           </Link>
 
           <Drawer open={open} onOpenChange={setOpen}>
@@ -100,7 +106,7 @@ export const LayoutHeader = () => {
                 <DrawerClose
                   render={
                     <Link
-                      href={siteConfig.links.chromeStore}
+                      href={cta.href}
                       className={cn(
                         buttonVariants({ size: "sm" }),
                         "mt-2 w-full"
@@ -109,7 +115,7 @@ export const LayoutHeader = () => {
                   }
                   nativeButton={false}
                 >
-                  Add to Chrome
+                  {cta.label}
                 </DrawerClose>
               </nav>
             </DrawerContent>
