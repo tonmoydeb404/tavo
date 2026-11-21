@@ -11,6 +11,7 @@
       ]
     },
     "apps/extension": {},
+    "apps/desktop": {},
     "packages/ui": {
       "entry": [
         "src/components/**/*.tsx",
