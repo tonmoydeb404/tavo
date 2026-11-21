@@ -36,10 +36,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Linux dependencies (Tauri)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf build-essential
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Brand sync check
+        run: pnpm sync-brand:check
+
+      - name: Typecheck
+        run: pnpm --filter @workspace/desktop typecheck
+
+      - name: Lint
+        run: pnpm --filter @workspace/desktop lint
+
+      - name: Build frontend
+        run: pnpm --filter @workspace/desktop build
+
+  rust:
+    # The backend depends on macOS-only crates (objc2, CoreAudio), so it can
+    # only be compiled and linted on a macOS runner.
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -62,15 +88,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Brand sync check
-        run: pnpm sync-brand:check
-
-      - name: Typecheck
-        run: pnpm --filter @workspace/desktop typecheck
-
-      - name: Lint
-        run: pnpm --filter @workspace/desktop lint
 
       - name: Build frontend
         run: pnpm --filter @workspace/desktop build
