@@ -13,6 +13,16 @@ export type Release = {
 
 export const releases: Release[] = [
   {
+    version: "1.2.1",
+    date: "2026-11-21",
+    changes: [
+      {
+        type: "fixed",
+        text: "The Tavo for Mac release pipeline now builds and publishes the macOS app, so v1.2.0's desktop download and in-app update are available from this version.",
+      },
+    ],
+  },
+  {
     version: "1.2.0",
     date: "2026-11-21",
     changes: [

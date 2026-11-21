@@ -63,7 +63,7 @@ jobs:
   rust:
     # The backend depends on macOS-only crates (objc2, CoreAudio), so it can
     # only be compiled and linted on a macOS runner.
-    runs-on: macos-14
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
