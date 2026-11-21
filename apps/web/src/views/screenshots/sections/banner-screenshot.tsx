@@ -51,7 +51,7 @@ function BannerScreenshot() {
       <div className="relative flex w-[44%] flex-col justify-between bg-primary p-12 text-primary-foreground">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-white/10 blur-3xl"
+          className="pointer-events-none absolute -top-24 -right-24 size-80 rounded-full bg-white/10 blur-3xl"
         />
         <div
           aria-hidden="true"
@@ -64,7 +64,7 @@ function BannerScreenshot() {
         />
 
         <div className="relative">
-          <h1 className="font-heading text-5xl font-bold leading-[1.05] tracking-tight text-balance">
+          <h1 className="font-heading text-5xl leading-[1.05] font-bold tracking-tight text-balance">
             Per-tab audio, mic &amp; camera — from your toolbar
           </h1>
           <p className="mt-4 max-w-md text-lg text-primary-foreground/85">
@@ -92,7 +92,7 @@ function BannerScreenshot() {
                 <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
                   <Icon className="size-5" />
                 </span>
-                <h3 className="font-heading mt-3 text-lg font-semibold tracking-tight">
+                <h3 className="mt-3 font-heading text-lg font-semibold tracking-tight">
                   {pillar.title}
                 </h3>
                 <p className="mt-1 text-sm text-pretty text-muted-foreground">

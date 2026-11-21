@@ -26,8 +26,7 @@ const row = (
   partial: Partial<FeatureRow> & Pick<FeatureRow, "tab" | "state">
 ): FeatureRow => {
   const title = partial.tab.title ?? ""
-  const favIconUrl =
-    partial.tab.favIconUrl ?? faviconForTitle(title)
+  const favIconUrl = partial.tab.favIconUrl ?? faviconForTitle(title)
   return {
     activity: { hasMic: false, hasCamera: false },
     ...partial,

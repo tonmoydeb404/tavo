@@ -6,9 +6,13 @@
     "build": "turbo build",
     "clean:workspace": "bash ./scripts/clean-workspace.sh",
     "dev": "turbo dev",
+    "dev:desktop": "pnpm --filter @workspace/desktop dev",
     "lint": "turbo lint",
     "format": "turbo format",
     "typecheck": "turbo typecheck",
+    "keys:generate": "node ./scripts/generate-keys.mjs",
+    "sync-brand": "node ./scripts/sync-brand.mjs",
+    "sync-brand:check": "node ./scripts/sync-brand.mjs --check",
     "knip": "knip",
     "knip:fix": "knip --fix",
     "release:tag": "node ./scripts/release-tag-sync.mjs"

@@ -13,7 +13,7 @@ function TileScreenshot() {
       {/* Soft highlight bloom in the top-right */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-16 -top-16 size-56 rounded-full bg-white/15 blur-2xl"
+        className="pointer-events-none absolute -top-16 -right-16 size-56 rounded-full bg-white/15 blur-2xl"
       />
       <div
         aria-hidden="true"
@@ -26,7 +26,7 @@ function TileScreenshot() {
       />
 
       <div className="relative">
-        <h1 className="font-heading text-3xl font-bold leading-tight tracking-tight">
+        <h1 className="font-heading text-3xl leading-tight font-bold tracking-tight">
           Per-tab volume,
           <br />
           mic &amp; webcam

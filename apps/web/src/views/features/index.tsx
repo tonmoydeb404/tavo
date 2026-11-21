@@ -17,7 +17,7 @@ import { CtaSection, HeroSection } from "@/components/sections"
 import { pathsConfig } from "@/configs/path-config"
 import { IconCard } from "@workspace/ui/components/icon-card"
 
-import { SectionHeading } from "@/views/home/components"
+import { SectionHeading } from "@/views/extension/components"
 
 type CoreFeature = {
   icon: ComponentType<{ className?: string }>

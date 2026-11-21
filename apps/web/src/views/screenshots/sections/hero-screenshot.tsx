@@ -1,5 +1,5 @@
 import { BrandMark } from "../components/brand-mark"
-import { MixerMockup } from "@/views/home/components"
+import { MixerMockup } from "@/views/extension/components"
 
 /**
  * 1280x800 — primary Chrome Web Store screenshot.
@@ -14,7 +14,7 @@ function HeroScreenshot() {
       {/* Decorative blooms */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-40 -top-40 size-[520px] rounded-full bg-primary/15 blur-3xl"
+        className="pointer-events-none absolute -top-40 -right-40 size-[520px] rounded-full bg-primary/15 blur-3xl"
       />
       <div
         aria-hidden="true"
@@ -24,10 +24,9 @@ function HeroScreenshot() {
       <div className="relative flex w-full items-center justify-between gap-10 px-16">
         <div className="max-w-xl">
           <BrandMark glyphClassName="size-12" />
-          <h1 className="mt-10 font-heading text-6xl font-bold leading-[1.05] tracking-tight text-balance">
-            Every tab&apos;s{" "}
-            <span className="text-primary">volume, mic</span> and{" "}
-            <span className="text-primary">camera</span>
+          <h1 className="mt-10 font-heading text-6xl leading-[1.05] font-bold tracking-tight text-balance">
+            Every tab&apos;s <span className="text-primary">volume, mic</span>{" "}
+            and <span className="text-primary">camera</span>
           </h1>
           <p className="mt-5 text-xl text-pretty text-muted-foreground">
             Mute one tab — not the whole site. Boost quiet audio up to 400%.

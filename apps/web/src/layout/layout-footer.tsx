@@ -10,7 +10,9 @@ import { buttonVariants } from "@workspace/ui/components/button"
 import { cn } from "@workspace/ui/lib/utils"
 
 function browserRequestMailto(browser: string): string {
-  const subject = encodeURIComponent(`${brand.name} — ${browser} support request`)
+  const subject = encodeURIComponent(
+    `${brand.name} — ${browser} support request`
+  )
   const body = encodeURIComponent(
     `Hi, I'd love to use ${brand.name} on ${browser}. Please let me know when it's available.`
   )
@@ -19,7 +21,16 @@ function browserRequestMailto(browser: string): string {
 
 const footerNav = [
   {
-    title: "Features",
+    title: "Products",
+    links: [
+      { href: pathsConfig.extension, label: "Browser extension" },
+      { href: pathsConfig.desktop, label: "Mac app" },
+      { href: siteConfig.links.chromeStore, label: "Chrome Web Store" },
+      { href: siteConfig.links.releases, label: "Mac downloads" },
+    ],
+  },
+  {
+    title: "Extension features",
     links: [
       { href: pathsConfig.volumeBooster, label: "Volume Booster" },
       { href: pathsConfig.muteTab, label: "Mute Tab" },
@@ -71,8 +82,9 @@ export const LayoutFooter = () => {
               </span>
             </Link>
             <p className="mt-4 text-sm text-pretty text-muted-foreground">
-              {siteConfig.brand.tagline}. Free and privacy-first — built for
-              Chrome, Edge, and Brave.
+              {siteConfig.brand.tagline}. Free and privacy-first — a browser
+              extension for Chrome, Edge, and Brave, and a menu-bar app for
+              macOS.
             </p>
           </div>
 
@@ -89,7 +101,7 @@ export const LayoutFooter = () => {
         </div>
 
         <nav aria-label="Footer" className="mt-12">
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-4 md:gap-x-10 lg:gap-x-12">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-3 md:gap-x-10 lg:grid-cols-5 lg:gap-x-12">
             {footerNav.map((column) => (
               <div key={column.title}>
                 <h3 className="flex items-center gap-2 font-heading text-xs tracking-wider text-foreground/80 uppercase">

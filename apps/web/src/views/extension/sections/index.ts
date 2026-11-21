@@ -1,0 +1,5 @@
+export * from "./hero-section"
+export * from "./problem-section"
+export * from "./features-section"
+export * from "./how-it-works-section"
+export * from "./faq-section"

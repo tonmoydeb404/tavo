@@ -14,16 +14,24 @@ export const siteConfig = {
   },
 
   seo: {
-    titleDefault: `${brand.name} — Per-tab volume & media controller for Chrome`,
+    titleDefault: `${brand.name} — Audio control for your browser and your Mac`,
     titleTemplate: `%s · ${brand.name}`,
     description:
-      "A per-tab volume control and media controller for Chrome. Mute and boost any tab to 400%, toggle your mic and webcam — one tab at a time.",
-    ogTitle: `${brand.name} — volume, mic, and webcam control for every tab`,
+      "Audio control in two places. A browser extension for per-tab volume, mic, and webcam control, and a macOS menu-bar app for switching devices, muting your mic, and routing app audio.",
+    ogTitle: `${brand.name} — audio control for your browser and your Mac`,
     ogDescription:
-      "Mute, boost, and toggle mic and webcam on any tab — without digging through settings. Free, for Chrome, Edge, and Brave.",
+      "Per-tab volume, mic, and webcam control in Chrome, plus a macOS menu-bar app to switch devices, mute your mic, and route app audio. Free and open source.",
   },
 
-  links: brand.links,
+  links: {
+    ...brand.links,
+    releases: `${brand.links.github}/releases/latest`,
+  },
+
+  desktop: {
+    installScript:
+      "curl -fsSL https://raw.githubusercontent.com/tonmoydeb404/tavo/main/setup/unix.sh | sh",
+  },
 
   developer: brand.developer,
 } as const

@@ -112,12 +112,7 @@ function ScreenshotsView() {
       for (const shot of featureShots) {
         const node = captureRefs.current.get(shot.id)
         if (!node) continue
-        await downloadNode(
-          node,
-          shot.filename,
-          FEATURE_WIDTH,
-          FEATURE_HEIGHT
-        )
+        await downloadNode(node, shot.filename, FEATURE_WIDTH, FEATURE_HEIGHT)
       }
     } finally {
       setDownloadingAll(false)
@@ -132,9 +127,9 @@ function ScreenshotsView() {
   // download UX.
 
   return (
-    <main className="container pb-24 pt-32">
+    <main className="container pt-32 pb-24">
       <header className="mx-auto max-w-3xl text-center">
-        <span className="inline-flex items-center rounded-full border border-border/60 bg-muted/40 px-3 py-1 text-xs font-medium tracking-wide uppercase text-muted-foreground">
+        <span className="inline-flex items-center rounded-full border border-border/60 bg-muted/40 px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground uppercase">
           Chrome Web Store
         </span>
         <h1 className="mt-4 font-heading text-4xl font-bold tracking-tight text-balance sm:text-5xl">
@@ -165,7 +160,7 @@ function ScreenshotsView() {
       </header>
 
       <div className="mx-auto mt-16 flex max-w-5xl flex-col gap-10">
-        <h2 className="font-heading sr-only">Store assets</h2>
+        <h2 className="sr-only font-heading">Store assets</h2>
         {storeShots.map((shot) => (
           <ScreenshotFrame
             key={shot.id}

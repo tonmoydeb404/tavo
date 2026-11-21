@@ -8,7 +8,7 @@ import type { ComponentType } from "react"
 
 import { IconCard } from "@workspace/ui/components/icon-card"
 
-import { SectionHeading } from "@/views/home/components"
+import { SectionHeading } from "@/views/extension/components"
 
 type Feature = {
   icon: ComponentType<{ className?: string }>
