@@ -1,8 +1,8 @@
 cask "tavo" do
   arch arm: "aarch64"
 
-  version "0.1.0"
-  sha256 "no-hash-yet"
+  version "1.2.1"
+  sha256 "c30ad338de671b534f75a3272cb7527e7294cb9729d72f46fb35ecd33eaed8fb"
 
   url "https://github.com/tonmoydeb404/tavo/releases/download/v#{version}/Tavo_#{version}_#{arch}.dmg"
   name "Tavo"
