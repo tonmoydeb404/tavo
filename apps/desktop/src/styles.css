@@ -1,0 +1,117 @@
+/*
+ * Desktop theme. Layers over the shared tokens in @workspace/ui/globals.css
+ * (which the web app also uses), so changes here never leak to apps/web.
+ *
+ * Light/dark follows the macOS appearance only — `syncSystemTheme()` toggles
+ * the `.dark` class (see lib/system-theme.ts); there is no manual switch.
+ * Surfaces are neutral and quiet; the brand orange is reserved for the
+ * things you can act on (selection, sliders, primary buttons).
+ */
+
+:root {
+  color-scheme: light dark;
+
+  --background: oklch(0.968 0.003 80);
+  --foreground: oklch(0.22 0.006 60);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.006 60);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.006 60);
+  --primary: oklch(0.6 0.21 36);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.94 0.006 80);
+  --secondary-foreground: oklch(0.3 0.006 60);
+  --muted: oklch(0.945 0.004 80);
+  --muted-foreground: oklch(0.52 0.01 60);
+  --accent: oklch(0.94 0.006 80);
+  --accent-foreground: oklch(0.22 0.006 60);
+  --destructive: oklch(0.58 0.215 27);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.22 0.006 60 / 9%);
+  --input: oklch(0.22 0.006 60 / 8%);
+  --ring: oklch(0.6 0.21 36);
+  --radius: 0.625rem;
+
+  --success: oklch(0.58 0.14 150);
+  --warning: oklch(0.7 0.15 75);
+
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue",
+    system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+  --font-brand: "Amaranth", "Amaranth Fallback", var(--font-sans);
+}
+
+.dark {
+  --background: oklch(0.2 0.004 60);
+  --foreground: oklch(0.96 0.004 80);
+  --card: oklch(0.245 0.005 60);
+  --card-foreground: oklch(0.96 0.004 80);
+  --popover: oklch(0.27 0.005 60);
+  --popover-foreground: oklch(0.96 0.004 80);
+  --primary: oklch(0.7 0.18 40);
+  --primary-foreground: oklch(0.18 0.02 40);
+  --secondary: oklch(0.3 0.005 60);
+  --secondary-foreground: oklch(0.96 0.004 80);
+  --muted: oklch(0.29 0.005 60);
+  --muted-foreground: oklch(0.72 0.008 70);
+  --accent: oklch(0.3 0.005 60);
+  --accent-foreground: oklch(0.96 0.004 80);
+  --destructive: oklch(0.7 0.19 25);
+  --destructive-foreground: oklch(0.18 0.02 25);
+  --border: oklch(1 0 0 / 9%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.7 0.18 40);
+
+  --success: oklch(0.74 0.15 150);
+  --warning: oklch(0.8 0.14 80);
+}
+
+@layer base {
+  html,
+  body {
+    height: 100%;
+    background: var(--background);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+    -webkit-font-smoothing: antialiased;
+    /* Native-app feel: no accidental text selection / I-beam over the UI. */
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+    overscroll-behavior: none;
+  }
+
+  input,
+  textarea {
+    -webkit-user-select: text;
+    user-select: text;
+    cursor: text;
+  }
+
+  /* Slim, quiet scrollbars. */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--input);
+    background-clip: padding-box;
+    border: 3px solid transparent;
+  }
+}
+
+@theme inline {
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+}

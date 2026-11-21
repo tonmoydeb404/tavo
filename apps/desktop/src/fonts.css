@@ -1,0 +1,7 @@
+/*
+ * Amaranth (the brand typeface, same as apps/web) is bundled locally via
+ * @fontsource and used for the wordmark only — body text uses the system
+ * font (see styles.css) so the app reads as native on macOS.
+ */
+@import "@fontsource/amaranth/latin-400.css";
+@import "@fontsource/amaranth/latin-700.css";
