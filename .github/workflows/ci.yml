@@ -71,9 +71,20 @@ jobs:
       - name: Zip Chrome extension
         run: pnpm --filter @workspace/extension zip
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Release notes come from the changelog page content so the website,
+      # GitHub release and desktop updater dialog all match.
+      - name: Compose release notes
+        env:
+          TAG: ${{ github.event.inputs.tag || github.ref_name }}
+        run: node scripts/compose-release-notes.mjs "$TAG" "$RUNNER_TEMP/release-body.md"
+
       - name: Upload ZIPs to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.event.inputs.tag || github.ref_name }}
-          generate_release_notes: true
+          body_path: ${{ runner.temp }}/release-body.md
           files: apps/extension/.output/Tavo-*-chrome.zip

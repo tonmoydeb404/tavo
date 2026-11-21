@@ -1,14 +1,14 @@
 name: Release Desktop
 
-# Desktop releases use the `desktop-v*` tag prefix so they never collide with
-# the browser-extension release workflow (which triggers on `v*` tags).
-# Version source of truth: brand.json -> apps/desktop/src-tauri/tauri.conf.json
-# (kept in sync by scripts/sync-brand.mjs).
+# One `v*` tag releases every app: this workflow and the browser-extension
+# release workflow both trigger on it and attach their assets to the same
+# GitHub release. The version is bumped everywhere by `pnpm release:tag`
+# (root package.json -> brand.json -> tauri.conf.json via sync-brand).
 
 on:
   push:
     tags:
-      - "desktop-v*"
+      - "v*"
   workflow_dispatch:
 
 concurrency:
@@ -65,7 +65,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           projectPath: apps/desktop
-          tagName: desktop-v__VERSION__
+          tagName: v__VERSION__
           releaseName: "${{ steps.brand.outputs.app_name }} Desktop v__VERSION__"
           releaseDraft: false
           prerelease: false
@@ -140,7 +140,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           projectPath: apps/desktop
-          tagName: desktop-v__VERSION__
+          tagName: v__VERSION__
           releaseName: "${{ steps.brand.outputs.app_name }} Desktop v__VERSION__"
           releaseDraft: false
           prerelease: false
@@ -210,7 +210,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           projectPath: apps/desktop
-          tagName: desktop-v__VERSION__
+          tagName: v__VERSION__
           releaseName: "${{ steps.brand.outputs.app_name }} Desktop v__VERSION__"
           releaseDraft: false
           prerelease: false
@@ -270,7 +270,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # release is still a draft, so download via authenticated gh cli instead of the public URL
-          gh release download "desktop-v${{ steps.brand.outputs.version }}" \
+          gh release download "v${{ steps.brand.outputs.version }}" \
             --repo "${{ github.repository }}" \
             --pattern "${{ steps.brand.outputs.app_name }}_${{ steps.brand.outputs.version }}_aarch64.dmg" \
             --output dmg
@@ -293,3 +293,37 @@ jobs:
           git add "Casks/${{ steps.brand.outputs.slug }}.rb"
           git commit -m "chore(desktop): update homebrew cask to v${{ steps.brand.outputs.version }}"
           git push origin HEAD:main
+
+  sync-updater-notes:
+    # tauri-action snapshots an empty body into latest.json's notes, so the
+    # update dialog would be blank. Fill them from the changelog page content
+    # (apps/web/src/content/changelog.ts); release:tag refuses to tag without
+    # an entry. The manifest isn't signed (signatures cover the installers).
+    needs: [release-macos, release-linux, release-windows]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Sync latest.json notes from the changelog
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d)"
+          node scripts/compose-release-notes.mjs "$TAG" "$work/body.md" "$work/notes.txt"
+          gh release download "$TAG" --repo "${{ github.repository }}" \
+            --pattern latest.json --output "$work/latest.json"
+          jq -e '.version and (.platforms | length > 0)' "$work/latest.json" >/dev/null
+          mkdir -p "$work/upload"
+          jq --arg notes "$(cat "$work/notes.txt")" '.notes = $notes' \
+            "$work/latest.json" > "$work/upload/latest.json"
+          gh release upload "$TAG" --repo "${{ github.repository }}" \
+            --clobber "$work/upload/latest.json"

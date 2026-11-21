@@ -3,10 +3,15 @@
 import { execSync } from "node:child_process"
 import { existsSync, readFileSync, writeFileSync } from "node:fs"
 import { resolve } from "node:path"
+import { pathToFileURL } from "node:url"
 
 const ROOT = resolve(process.cwd())
+// The root package.json is the source of truth for the version. These files
+// get the same version; the desktop app (brand.json, tauri.conf.json,
+// Cargo.toml, ...) is synced afterwards by `pnpm sync-brand`.
 const TARGETS = [
   "package.json",
+  "brand.json",
   "apps/web/package.json",
   "apps/extension/package.json",
 ]
@@ -72,7 +77,14 @@ function usage() {
   )
 }
 
-function main() {
+async function findChangelogEntry(version) {
+  const { findRelease } = await import(
+    pathToFileURL(resolve(ROOT, "scripts/compose-release-notes.mjs")).href
+  )
+  return findRelease(version)
+}
+
+async function main() {
   const args = process.argv.slice(2)
   const bumpOrVersion = args[0]
   const dryRun = args.includes("--dry-run")
@@ -105,8 +117,21 @@ function main() {
     for (const filePath of TARGETS) {
       console.log(`- ${filePath}`)
     }
+    console.log(`Would also sync apps/desktop via pnpm sync-brand`)
     console.log(`Would create tag: ${tag}`)
+    console.log(
+      (await findChangelogEntry(newVersion))
+        ? "Changelog entry found."
+        : `WARNING: no changelog entry for ${newVersion} in apps/web/src/content/changelog.ts — a real run would abort.`
+    )
     return
+  }
+
+  // Release notes (GitHub release + updater dialog) come from this entry.
+  if (!(await findChangelogEntry(newVersion))) {
+    throw new Error(
+      `No changelog entry for ${newVersion} in apps/web/src/content/changelog.ts.\nAdd one first — CI uses it for the release notes.`
+    )
   }
 
   // Keep release commits predictable and avoid tagging unreviewed work.
@@ -128,8 +153,9 @@ function main() {
     writeJson(filePath, pkg)
   }
 
-  const files = TARGETS.join(" ")
-  run(`git add ${files}`)
+  run("pnpm sync-brand", { stdio: "inherit" })
+
+  run("git add -A")
   run(`git commit -m "chore(release): ${tag}"`, { stdio: "inherit" })
   run(`git tag -a ${tag} -m "Release ${tag}"`)
 
@@ -139,12 +165,12 @@ function main() {
   }
 
   console.log(
-    `Released ${tag} and synced versions in ${TARGETS.length} package files.`
+    `Released ${tag} (root, web, extension, brand.json + desktop via sync-brand).`
   )
 }
 
 try {
-  main()
+  await main()
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error))
   process.exit(1)
