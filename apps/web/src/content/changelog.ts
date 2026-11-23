@@ -13,6 +13,16 @@ export type Release = {
 
 export const releases: Release[] = [
   {
+    version: "1.2.2",
+    date: "2026-11-23",
+    changes: [
+      {
+        type: "fixed",
+        text: "Tavo for Mac is now a pure menu-bar app: it no longer shows up in the Dock when you open the settings window, and closing the window leaves it in the menu bar only. Auto-start at login opens in the menu bar too — no Dock icon at any point.",
+      },
+    ],
+  },
+  {
     version: "1.2.1",
     date: "2026-11-21",
     changes: [
