@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-  <!-- Merged into the generated Info.plist by the Tauri bundler.
-       Required for Core Audio process taps (per-app audio routing):
-       the first tap creation triggers the TCC "System Audio Recording"
-       prompt using this description. -->
+  <!-- Merged into the generated Info.plist by the Tauri bundler. -->
   <dict>
+    <!-- Required for Core Audio process taps (per-app audio routing):
+         the first tap creation triggers the TCC "System Audio Recording"
+         prompt using this description. -->
     <key>NSAudioCaptureUsageDescription</key>
     <string>Tavo needs System Audio Recording permission to redirect an app's audio to a different output device. No audio is recorded or stored — captured audio is played directly to the output device you choose.</string>
+    <!-- Pure menu-bar app: no Dock icon and no app-switcher (Cmd+Tab)
+         entry, from the instant the process launches (covers autostart
+         at login, before any runtime code runs). The runtime
+         set_activation_policy(Accessory) call in lib.rs mirrors this for
+         unbundled `tauri dev` runs. -->
+    <key>LSUIElement</key>
+    <true/>
   </dict>
 </plist>
