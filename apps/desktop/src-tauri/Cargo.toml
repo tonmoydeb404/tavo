@@ -1,6 +1,6 @@
 [package]
 name = "tavo"
-version = "1.2.1"
+version = "1.2.2"
 description = "Menu-bar audio control for macOS — switch devices, mute the mic, route app audio."
 authors = ["Tonmoy Deb"]
 homepage = "https://tonmoydeb.com"

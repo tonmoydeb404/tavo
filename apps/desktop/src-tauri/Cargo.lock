@@ -4485,7 +4485,7 @@ dependencies = [
 
 [[package]]
 name = "tavo"
-version = "1.2.1"
+version = "1.2.2"
 dependencies = [
  "base64 0.22.1",
  "objc2",
